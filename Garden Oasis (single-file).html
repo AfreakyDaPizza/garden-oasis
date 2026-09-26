@@ -305,7 +305,89 @@
     .load-btn { width: 100%; margin-top: 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff; font-weight: 700; padding: 11px 20px; border-radius: 12px; cursor: pointer; transition: .2s; }
     .load-btn:hover { background: rgba(255,255,255,.22); }
     .version-footer { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: .8rem; opacity: .55; letter-spacing: 1px; z-index: 2; }
-</style>
+
+    /* ==================== AETHELGARD SANCTUARY — ARTISTIC GILDING (v12) ==================== */
+    @property --sanctAngle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+    #ascend-screen { overflow: visible; }
+    .sanctuary-title { position: relative; display: inline-block; font-weight: 900; letter-spacing: 1px; line-height: 1.2;
+      background: linear-gradient(120deg,#ffe9c2,#a78bfa,#60a5fa,#f0abfc,#8b5cf6,#ffe9c2); background-size: 300% 300%;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shrineGrad 8s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(160,120,255,.28)); }
+    @keyframes shrineGrad { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .sanctuary-title::after { content: ''; display: block; width: 100%; height: 3px; margin-top: 8px; border-radius: 3px;
+      background: linear-gradient(90deg, transparent, #ffd76a, #a78bfa, transparent); background-size: 200% 100%;
+      -webkit-background-clip: border-box; background-clip: border-box; -webkit-text-fill-color: initial; animation: titleLine 4s linear infinite; }
+    @keyframes titleLine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    .solstice-veil { position: absolute; inset: -40px; z-index: 0; overflow: hidden; pointer-events: none; border-radius: inherit; }
+    .ribbon { position: absolute; width: 140%; height: 260px; left: -20%; border-radius: 50%; filter: blur(70px); opacity: .28;
+      animation: auroraSway 26s ease-in-out infinite; }
+    .ribbon.r1 { top: -80px; background: linear-gradient(90deg,#4f46e5,#7c3aed,#a855f7); }
+    .ribbon.r2 { bottom: -110px; background: linear-gradient(90deg,#0ea5e9,#22d3ee,#2dd4bf); animation-delay: -13s; }
+    .ribbon.r3 { top: 36%; height: 130px; opacity: .16; background: linear-gradient(90deg,#f472b6,#c084fc,#818cf8); animation-delay: -6s; }
+    @keyframes auroraSway { 0%,100% { transform: translateX(-6%) rotate(-2deg) scaleY(1); } 50% { transform: translateX(8%) rotate(2deg) scaleY(1.08); } }
+    .shoot { position: absolute; width: 130px; height: 2px; border-radius: 2px; opacity: 0;
+      background: linear-gradient(90deg,#fff,transparent); filter: drop-shadow(0 0 6px #fff); animation: shootArc 11s linear infinite; }
+    .shoot.s1 { top: 10%; left: 30%; animation-delay: 1s; }
+    .shoot.s2 { top: 55%; left: 72%; animation-delay: 5s; }
+    .shoot.s3 { top: 24%; left: 82%; animation-delay: 8s; }
+    @keyframes shootArc { 0% { opacity: 0; transform: translate(0,0) rotate(-35deg); } 7% { opacity: .95; }
+      20% { opacity: 0; transform: translate(-280px,196px) rotate(-35deg); } 100% { opacity: 0; transform: translate(-280px,196px) rotate(-35deg); } }
+    .mote { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #ffe9a0;
+      box-shadow: 0 0 12px 2px rgba(255,215,106,.8); opacity: .6; animation: moteRise 7s ease-in-out infinite; }
+    @keyframes moteRise { 0%,100% { transform: translateY(0) scale(1); opacity: .25; } 50% { transform: translateY(-30px) scale(1.7); opacity: 1; } }
+
+    .token-counter { backdrop-filter: blur(6px); }
+    .token-counter::before { content: '✦ '; opacity: .8; }
+    .token-counter::after { content: ' ✦'; opacity: .8; }
+
+    .sanctum-grid { z-index: 1; }
+    .orb-stage { position: relative; width: 172px; height: 172px; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; }
+    .rune-orbit { position: absolute; inset: 6px; border-radius: 50%; border: 1px dashed rgba(255,215,106,.30); animation: ringSpin 34s linear infinite; }
+    .rune-orbit::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid rgba(190,130,255,.12); animation: ringSpin 20s linear infinite reverse; }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    .rune-glyph { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px; font-size: .95rem; line-height: 22px;
+      text-align: center; color: #ffd9a0; text-shadow: 0 0 10px rgba(255,215,106,.95); animation: runeGlint 3.6s ease-in-out infinite; }
+    @keyframes runeGlint { 0%,100% { opacity: .22; text-shadow: 0 0 4px rgba(255,215,106,.3); } 50% { opacity: 1; text-shadow: 0 0 16px rgba(255,215,106,1); } }
+    .mystic-orb { position: relative; z-index: 1; }
+    .mystic-orb::after { content: ''; position: absolute; top: 50%; left: 50%; width: 86px; height: 86px; margin: -43px; border-radius: 50%;
+      border: 2px solid rgba(255,215,106,.55); box-shadow: 0 0 30px rgba(255,200,80,.5), inset 0 0 20px rgba(255,215,106,.45);
+      animation: haloPulse 2.8s ease-in-out infinite; pointer-events: none; }
+    @keyframes haloPulse { 0%,100% { transform: scale(.82); opacity: .65; } 50% { transform: scale(1.06); opacity: 1; } }
+
+    .singularity-card { position: relative; overflow: hidden; }
+    .singularity-card::before { content: ''; position: absolute; inset: 0; border-radius: 30px; padding: 2px; pointer-events: none;
+      background: conic-gradient(from var(--sanctAngle), rgba(255,110,70,.85), rgba(255,215,106,.55), rgba(214,90,255,.65), rgba(96,165,250,.6), rgba(255,110,70,.85));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: spinBorder 7s linear infinite; }
+    @keyframes spinBorder { to { --sanctAngle: 360deg; } }
+    .singularity-card::after { content: ''; position: absolute; inset: 0; border-radius: 30px; pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(255,120,90,.10), transparent 55%); animation: emberBreath 5s ease-in-out infinite; }
+    @keyframes emberBreath { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+    .singularity-btn { position: relative; overflow: hidden; }
+    .singularity-btn::before { content: ''; position: absolute; top: 0; left: -70%; width: 45%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent); transform: skewX(-20deg); animation: btnSheen 3.4s ease-in-out infinite; pointer-events: none; }
+    @keyframes btnSheen { 0% { left: -70%; } 55% { left: 130%; } 100% { left: 130%; } }
+
+    .sanctum-panel { position: relative; overflow: hidden; box-shadow: 0 12px 44px rgba(16,10,50,.4); }
+    .sanctum-panel::before { content: ''; position: absolute; top: 0; left: -60%; width: 50%; height: 2px;
+      background: linear-gradient(90deg, transparent, #9be8ff, transparent); animation: panelSheen 5.5s linear infinite; pointer-events: none; }
+    @keyframes panelSheen { 0% { left: -60%; } 100% { left: 130%; } }
+    .sanctum-upgrade, .vault-item { transition: border-color .25s, box-shadow .25s, transform .25s; }
+    .sanctum-upgrade:hover, .vault-item:hover { border-color: rgba(255,215,106,.38); box-shadow: 0 0 20px rgba(255,215,106,.14); transform: translateX(4px); }
+
+    /* ==================== GLOBAL ARTISTIC GILDING ==================== */
+    body { scrollbar-color: #7ad07a #0a1f0a; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: rgba(6,18,6,.45); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#3a7a3a,#2d5a2d); border-radius: 10px; border: 2px solid rgba(6,18,6,.6); }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg,#4a8a4a,#3a6a3a); }
+    ::selection { background: rgba(122,208,122,.32); }
+    .screen-container { animation: screenRise .45s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes screenRise { from { opacity: 0; transform: translateY(12px) scale(.995); } to { opacity: 1; transform: none; } }
+    
+  </style>
 </head>
 <body>
   <div id="app" class="min-h-screen p-4 relative">
@@ -568,15 +650,32 @@
 
     <!-- ASCEND -->
     <div id="ascend-screen" class="hidden screen-container max-w-6xl mx-auto sanctum-screen">
+      <div class="solstice-veil">
+        <div class="ribbon r1"></div><div class="ribbon r2"></div><div class="ribbon r3"></div>
+        <div class="shoot s1"></div><div class="shoot s2"></div><div class="shoot s3"></div>
+        <div class="mote" style="top:16%;left:18%;animation-delay:0s;"></div>
+        <div class="mote" style="top:64%;left:80%;animation-delay:1.1s;"></div>
+        <div class="mote" style="top:42%;left:70%;animation-delay:2.2s;"></div>
+        <div class="mote" style="top:74%;left:12%;animation-delay:3.3s;"></div>
+      </div>
       <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-        <h2 class="text-4xl font-bold" style="background:linear-gradient(135deg,#d0a0ff,#6a5acd,#1a0b3e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🜃 The Aethelgard Sanctuary</h2>
+        <h2 class="sanctuary-title">🜃 The Aethelgard Sanctuary</h2>
         <div class="sanctum-constellation">✦ ✧ ˖ ⁙ ⊹ ✦ ⬆️ ✦ ⊹ ⁙ ˖ ✧ ✦</div>
         <div class="token-counter">🪙 Rebirth Tokens: <span id="rebirth-tokens-display">0</span></div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sanctum-grid">
         <div>
           <div class="singularity-card">
-            <div class="obelisk">🗿</div>
+            <div class="orb-stage">
+              <div class="obelisk mystic-orb">🗿</div>
+              <div class="rune-orbit"></div>
+              <span class="rune-glyph" style="transform:rotate(0deg) translate(78px) rotate(0deg);animation-delay:0s;">ᚠ</span>
+              <span class="rune-glyph" style="transform:rotate(60deg) translate(78px) rotate(-60deg);animation-delay:.6s;">ᚢ</span>
+              <span class="rune-glyph" style="transform:rotate(120deg) translate(78px) rotate(-120deg);animation-delay:1.2s;">ᚦ</span>
+              <span class="rune-glyph" style="transform:rotate(180deg) translate(78px) rotate(-180deg);animation-delay:1.8s;">ᚨ</span>
+              <span class="rune-glyph" style="transform:rotate(240deg) translate(78px) rotate(-240deg);animation-delay:2.4s;">ᚱ</span>
+              <span class="rune-glyph" style="transform:rotate(300deg) translate(78px) rotate(-300deg);animation-delay:3s;">ᛅ</span>
+            </div>
             <div class="text-2xl font-black mt-2" style="color:#ff6a4a;text-shadow:0 0 24px rgba(255,80,40,0.5);">THE SINGULARITY ENGINE</div>
             <p class="text-sm mt-2" style="color:rgba(255,200,190,0.6);">A swirling vortex of nebulae and starlight. Pay the cosmic toll to shatter your garden into stardust and be reborn.</p>
             <div class="mt-4 space-y-2 text-left text-sm">
