@@ -391,6 +391,83 @@
     .oven-chip { border:1px solid rgba(80,180,80,0.15); background:rgba(10,30,10,0.4); border-radius:14px; padding:6px 8px; font-size:0.7rem; color:#d4e8d4; text-align:center; }
     .gf-rank-row { border:1px dashed rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); border-radius:10px; padding:3px 8px; font-size:0.72rem; color:#9aa6cc; }
     .gf-gazette { border-left:2px solid rgba(255,215,106,0.22); padding:3px 8px; margin-top:4px; color:rgba(200,210,255,0.65); }
+  
+    /* ==================== RESKIN v13 — GLOBAL PREMIUM LAYER ==================== */
+    body { background: #081808; }
+    body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(circle at 16% 10%, rgba(90,190,120,.10), transparent 46%),
+                  radial-gradient(circle at 85% 90%, rgba(70,140,220,.08), transparent 50%),
+                  radial-gradient(circle at 50% 55%, rgba(160,130,70,.06), transparent 55%),
+                  linear-gradient(180deg,#0c220c,#071307); }
+    .screen-container { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(60,140,80,.12), transparent 60%), linear-gradient(180deg,#0e260e,#081808);
+      border-color: rgba(130,210,130,.10); box-shadow: 0 34px 90px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.02), inset 0 1px 0 rgba(255,255,255,.05); }
+
+    .top-nav { background: linear-gradient(180deg, rgba(8,26,8,.98), rgba(5,16,5,.96)); border-bottom: 1px solid rgba(140,220,140,.08); box-shadow: 0 10px 46px rgba(0,0,0,.58); }
+    .top-nav .nav-brand { filter: drop-shadow(0 2px 10px rgba(80,180,80,.25)); }
+    .top-nav .nav-link { background: linear-gradient(160deg, rgba(70,150,70,.10), rgba(40,90,40,.05)); border-color: rgba(110,200,110,.10); color: #9fc49f; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+    .top-nav .nav-link:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(60,140,60,.28); color: #c4ecc4; }
+    .top-nav .nav-link.active { background: linear-gradient(160deg, rgba(130,220,130,.22), rgba(60,140,60,.12)); border-color: rgba(150,235,150,.32); color: #d2f5d2; box-shadow: 0 0 20px rgba(90,200,90,.4), inset 0 1px 0 rgba(255,255,255,.08); }
+    .top-nav .stat-pill { border-color: rgba(255,215,110,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    .stat-pill .num { color: #ffd97a; }
+
+    .vine-btn { background: linear-gradient(160deg,#3a8038,#1e4c1e 60%,#153a15); position: relative; overflow: hidden;
+      border: 1px solid rgba(150,225,150,.14); box-shadow: 0 6px 22px rgba(40,100,40,.3), inset 0 1px 0 rgba(255,255,255,.14); }
+    .vine-btn::before { content: ''; position: absolute; top: 0; left: -70%; width: 45%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.18), transparent); transform: skewX(-20deg); animation: btnSheen 4.6s ease-in-out infinite; pointer-events: none; }
+    .vine-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 46px rgba(50,130,50,.42); background: linear-gradient(165deg,#459048,#2a662a 60%,#1d4a1d); }
+    .vine-btn-danger { background: linear-gradient(160deg,#a83a2a,#5a1c14 60%,#40120c); border-color: rgba(255,150,120,.15); }
+    .vine-btn-danger::before { background: linear-gradient(100deg, transparent, rgba(255,255,255,.14), transparent); }
+    .vine-btn-gold { background: linear-gradient(160deg,#caa24a,#9a7a30 60%,#7a5e22); box-shadow: 0 6px 22px rgba(150,120,40,.3), inset 0 1px 0 rgba(255,255,255,.18); }
+    .vine-btn-gold:hover { background: linear-gradient(165deg,#dbb858,#b0903c 60%,#8a6a28); }
+
+    .screen-container input:focus, .screen-container textarea:focus, .screen-container select:focus { outline: none; box-shadow: 0 0 0 3px rgba(110,210,110,.2); }
+
+    /* ==================== RESKIN v13 — RESTAURANT SYMPHONY (FOOD CRITIC) ==================== */
+    #food-critic-screen { background: radial-gradient(ellipse 80% 45% at 50% 0%, rgba(255,190,70,.12), transparent 60%),
+      radial-gradient(ellipse 65% 45% at 88% 92%, rgba(210,70,40,.08), transparent 55%),
+      linear-gradient(180deg, rgba(20,13,4,.94), rgba(8,6,2,.95));
+      border-color: rgba(255,205,110,.24); }
+    .critic-title { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: 2.6rem; text-align: center; letter-spacing: 1px; margin-top: 8px;
+      background: linear-gradient(120deg,#ffe9a8,#f0c060,#c89030,#f6d987,#ffe9a8); background-size: 300% 300%;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shrineGrad 7s ease-in-out infinite;
+      filter: drop-shadow(0 6px 22px rgba(120,80,20,.45)); }
+    .critic-title::after { content: '\2726  \2726  \2726'; display: block; margin-top: 6px; letter-spacing: 3px; font-size: 1rem;
+      color: #e8b64a; -webkit-text-fill-color: #e8b64a; opacity: .8; }
+    .critic-sub { text-align: center; color: #cfa857; font-size: .85rem; letter-spacing: 2.5px; margin-bottom: 16px; font-style: italic; font-family: Georgia, serif; }
+    #food-critic-screen h4 { font-family: Georgia, 'Times New Roman', serif; letter-spacing: .5px; }
+    #food-critic-screen .bg-white\/5 { background: linear-gradient(160deg, rgba(255,248,228,.08), rgba(255,220,160,.03)) !important;
+      border: 1px solid rgba(255,205,110,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 14px 40px rgba(0,0,0,.38); }
+    #food-critic-screen .kitchen-card { background: linear-gradient(165deg, rgba(255,246,222,.11), rgba(255,214,150,.05));
+      border: 1px solid rgba(255,205,110,.3); box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 18px 50px rgba(0,0,0,.42); }
+    #food-critic-screen .cooking-pot-wrap { background: radial-gradient(ellipse at 50% 28%, rgba(120,78,30,.5), rgba(22,14,6,.35));
+      border: 1px solid rgba(255,190,90,.2); box-shadow: inset 0 2px 10px rgba(0,0,0,.5); }
+    #food-critic-screen .cooking-pot-slot { border-radius: 50%; width: 66px; height: 66px;
+      background: radial-gradient(circle at 38% 32%, rgba(255,250,235,.16), rgba(150,110,55,.3) 55%, rgba(60,38,14,.6));
+      border: 2px solid rgba(255,205,110,.32); box-shadow: inset 0 2px 7px rgba(0,0,0,.45), 0 6px 16px rgba(0,0,0,.4), 0 0 0 3px rgba(255,220,150,.04); }
+    #food-critic-screen .cooking-pot-slot:hover { border-color: rgba(255,215,120,.55); box-shadow: 0 10px 26px rgba(160,120,40,.3), 0 0 0 3px rgba(255,220,150,.06); }
+    #food-critic-screen .cooking-pot-slot.filled { background: radial-gradient(circle at 38% 30%, rgba(255,220,140,.3), rgba(180,120,34,.55) 55%, rgba(70,44,14,.65));
+      border-color: rgba(255,210,110,.7); box-shadow: inset 0 2px 8px rgba(255,220,140,.28), 0 0 24px rgba(255,190,60,.4); animation: slotBubble 1.8s ease-in-out infinite; }
+    #food-critic-screen .plant-pick { background: linear-gradient(160deg, rgba(255,244,214,.08), rgba(240,210,150,.03)); border: 1px solid rgba(255,205,110,.22); }
+    #food-critic-screen .plant-pick:hover { border-color: rgba(255,220,120,.6); box-shadow: 0 10px 26px rgba(160,120,40,.28);
+      background: linear-gradient(160deg, rgba(255,244,214,.14), rgba(240,210,150,.06)); }
+    #food-critic-screen .plant-pick .pick-qty { background: linear-gradient(135deg,#f6d987,#c89030); }
+    #food-critic-screen .cooking-progress-bar { background: linear-gradient(180deg,#241a0e,#1a1208); border: 1px solid rgba(255,200,100,.22);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,.75); height: 14px; border-radius: 999px; overflow: hidden; }
+    #food-critic-screen .cooking-progress-bar .fill { background: linear-gradient(90deg,#d9a63c,#f6d987,#d9a63c); background-size: 200% 100%;
+      box-shadow: 0 0 16px rgba(255,200,80,.5); animation: goldStripe 2.2s linear infinite alternate; }
+    @keyframes goldStripe { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+    #food-critic-screen table thead th { font-family: Georgia, serif; color: #e8b64a; letter-spacing: .6px; }
+    #food-critic-screen table tbody tr { transition: background .15s; }
+    #food-critic-screen table tbody tr:hover { background: rgba(255,225,170,.07); }
+    #food-critic-screen input { background: rgba(255,246,228,.07) !important; border-color: rgba(255,205,110,.28) !important; color: #ffedd0 !important; }
+    #food-critic-screen input:focus { border-color: #e8b64a !important; box-shadow: 0 0 0 3px rgba(255,205,110,.22); }
+    #craving-banner { border-color: rgba(255,205,110,.65) !important; animation: craveGlow 2s ease-in-out infinite; }
+    @keyframes craveGlow { 0%,100% { box-shadow: 0 0 16px rgba(255,190,60,.2); } 50% { box-shadow: 0 0 40px rgba(255,190,60,.45); } }
+    #food-critic-screen .food-option { background: linear-gradient(160deg, rgba(255,240,210,.06), rgba(255,200,120,.03)); border: 1px solid rgba(255,200,100,.3); border-radius: 14px; color: #ffe9c2; transition: all .2s; }
+    #food-critic-screen .food-option:hover { border-color: rgba(255,215,120,.6); box-shadow: 0 8px 22px rgba(160,120,40,.25); transform: translateY(-2px); }
+    #food-critic-screen .food-option.selected { background: linear-gradient(160deg, rgba(255,216,140,.28), rgba(200,150,60,.14)) !important; border-color: #e8b64a !important; box-shadow: 0 0 0 2px rgba(232,182,74,.28), 0 8px 26px rgba(200,150,60,.35) !important; color: #fff4dc; }
+    #milestones-container > div { background: rgba(255,245,220,.04); border: 1px solid rgba(255,205,110,.2); border-radius: 12px; padding: 6px 10px; }
+    
   </style>
 </head>
 <body>
@@ -739,7 +816,8 @@
 
     <!-- FOOD CRITIC -->
     <div id="food-critic-screen" class="hidden screen-container max-w-4xl mx-auto">
-      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🍳 Food Critic</h2>
+      <h2 class="critic-title">🍳 Food Critic</h2>
+      <p class="critic-sub">Five-star garden cuisine · the critics are always hungry</p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <div class="bg-white/5 p-4 rounded-xl mb-4"><div class="text-2xl font-bold text-amber-800 text-center">⭐ <span id="critic-points">0</span> pts</div></div>
