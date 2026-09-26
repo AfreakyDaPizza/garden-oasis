@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🌿 Garden Oasis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', 'Quicksand', system-ui, sans-serif; background: #0a1a0a; min-height: 100vh; color: #d4e8d4; overflow-x: hidden; }
+    h1, h2, h3, h4, .nav-brand, button { font-family: 'Baloo 2', 'Quicksand', system-ui, sans-serif; letter-spacing: 0.3px; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(30, 60, 30, 0.3); border-radius: 12px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(145deg, #4a9a4a, #2d7a2d); border-radius: 12px; }
+
+    .screen-container { background: rgba(10, 30, 10, 0.88); backdrop-filter: blur(24px); border-radius: 48px; border: 1px solid rgba(80, 180, 80, 0.06); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6); margin: 16px auto; padding: 28px; max-width: 1200px; animation: fadeSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); color: #d4e8d4; position: relative; z-index: 1; }
+    @keyframes fadeSlideIn { 0% { opacity: 0; transform: translateY(40px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+
+    .top-nav { background: rgba(8, 20, 8, 0.96); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(80, 180, 80, 0.04); padding: 10px 24px; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5); border-radius: 0 0 40px 40px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .top-nav .nav-brand { font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, #7ad07a, #4a9a4a, #2d7a2d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: flex; align-items: center; gap: 10px; margin-right: 16px; white-space: nowrap; }
+    .top-nav .nav-link { background: rgba(60, 140, 60, 0.06); border: 1px solid rgba(80, 180, 80, 0.04); border-radius: 40px; padding: 6px 18px; font-weight: 600; font-size: 0.75rem; color: #8aa88a; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); min-height: 36px; cursor: pointer; white-space: nowrap; }
+    .top-nav .nav-link.active { background: rgba(80, 180, 80, 0.12); border-color: rgba(80, 180, 80, 0.15); color: #7ad07a; }
+    .top-nav .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .top-nav .nav-right .stat-pill { background: rgba(20, 50, 20, 0.3); border: 1px solid rgba(80, 180, 80, 0.03); border-radius: 40px; padding: 2px 18px; font-size: 0.7rem; color: #8aa88a; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .stat-pill .num { color: #7ad07a; font-weight: 700; }
+
+    .vine-btn { background: linear-gradient(145deg, #2a5a2a, #1a3a1a); border: none; color: #e8f4e8; padding: 12px 28px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 20px rgba(42, 90, 42, 0.15); min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid rgba(120, 220, 120, 0.04); }
+    .vine-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 40px rgba(42, 90, 42, 0.25); background: linear-gradient(145deg, #3a7a3a, #2a5a2a); }
+    .vine-btn-gold { background: linear-gradient(145deg, #b89840, #9a7a30); }
+    .vine-btn-gold:hover { background: linear-gradient(145deg, #c8a850, #aa8a40); }
+
+    .rarity-common { background: linear-gradient(145deg, #3a4a3a, #2a3a2a) !important; color: #a8b8a8 !important; border-color: #3a4a3a !important; }
+    .rarity-rare { background: linear-gradient(145deg, #3a6a9a, #2a4a7a) !important; color: #fff !important; border-color: #2a5a8a !important; }
+    .rarity-mythic { background: linear-gradient(145deg, #c8a040, #a07830) !important; color: #fff !important; border-color: #b08830 !important; animation: mythicGlow 2s ease-in-out infinite alternate !important; }
+    @keyframes mythicGlow { 0% { box-shadow: 0 4px 20px rgba(160, 120, 48, 0.2); } 100% { box-shadow: 0 8px 44px rgba(160, 120, 48, 0.5); } }
+    .rarity-divine { background: linear-gradient(145deg, #d4a040, #b08030) !important; color: #fff !important; border-color: #c89030 !important; animation: divinePulse 3s ease-in-out infinite !important; }
+    @keyframes divinePulse { 0%, 100% { box-shadow: 0 4px 24px rgba(176, 128, 48, 0.3); transform: scale(1); } 50% { box-shadow: 0 8px 52px rgba(176, 128, 48, 0.5); transform: scale(1.02); } }
+    .rarity-prismatic { background: linear-gradient(135deg, #ff6b6b, #ffa94d, #fcc419, #69db7c, #4dabf7, #cc5de8, #ff6b6b) !important; background-size: 400% 400% !important; animation: prismaticShift 3s ease infinite !important; color: #fff !important; border-color: #8a3ad4 !important; }
+    @keyframes prismaticShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .rarity-exotic { background: linear-gradient(135deg, #ff6b6b, #fcc419, #69db7c, #4dabf7, #cc5de8, #ff6b6b) !important; background-size: 600% 600% !important; animation: exoticShift 4s ease-in-out infinite !important; color: #fff !important; border-color: #d43a3a !important; }
+    @keyframes exoticShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .rarity-iridescent { background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #9b59b6, #ff6b6b) !important; background-size: 300% 300% !important; animation: iridescentShift 2.5s ease-in-out infinite !important; color: #fff !important; border-color: #3a6ad4 !important; }
+    @keyframes iridescentShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .rarity-special { background: linear-gradient(145deg, #7a4a8a, #5a306a) !important; color: #fff !important; border-color: #6a3a7a !important; }
+    .rarity-badge { display: inline-block; padding: 0 16px; border-radius: 40px; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; line-height: 2.2; color: #fff; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+
+    .plant-slot { width: 64px; height: 64px; border-radius: 24px; border: 2px solid rgba(80, 180, 80, 0.06); background: rgba(20, 50, 20, 0.2); backdrop-filter: blur(4px); box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 28px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; transform-origin: center bottom; }
+    .plant-slot:hover { transform: translateY(-10px) scale(1.08) rotate(3deg); box-shadow: 0 16px 48px rgba(42, 90, 42, 0.2); border-color: rgba(80, 180, 80, 0.25); z-index: 10; }
+    .plant-slot .tooltip-box { visibility: hidden; opacity: 0; width: 260px; background: rgba(8, 20, 8, 0.98); backdrop-filter: blur(16px); border: 1px solid rgba(80, 180, 80, 0.08); border-radius: 24px; padding: 16px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); font-size: 0.8rem; line-height: 1.6; color: #d4e8d4; position: absolute; z-index: 999999 !important; bottom: 120%; left: 50%; transform: translateX(-50%) scale(0.85) translateY(8px); transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; max-height: 320px; overflow-y: auto; }
+    .plant-slot:hover .tooltip-box { visibility: visible; opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+    .plant-slot .tooltip-box::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px; border-width: 8px; border-style: solid; border-color: rgba(8, 20, 8, 0.98) transparent transparent transparent; }
+    .grow-timer { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #b8d8b8; background: rgba(8, 20, 8, 0.85); padding: 0 12px; border-radius: 30px; font-weight: 700; backdrop-filter: blur(4px); border: 1px solid rgba(80, 180, 80, 0.04); white-space: nowrap; }
+
+    .seedpack-machine { background: linear-gradient(145deg, #2a5a2a, #1a3a1a); border: 2px solid #4a8a3a; border-radius: 40px; padding: 16px 24px; box-shadow: 0 8px 32px rgba(42, 90, 42, 0.12); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; text-align: center; min-width: 120px; position: relative; }
+    .seedpack-machine:hover { transform: translateY(-10px) scale(1.04); box-shadow: 0 20px 60px rgba(42, 90, 42, 0.2); border-color: #5a9a4a; }
+    .seedpack-machine .machine-emoji { font-size: 4rem; display: block; line-height: 1.1; }
+    .seedpack-machine .machine-label { font-size: 0.75rem; color: #aac8aa; display: block; letter-spacing: 1px; }
+    .seedpack-machine .count-badge { position: absolute; top: -8px; right: -8px; background: #4a8a3a; border: 2px solid #1a3a1a; border-radius: 40px; padding: 2px 14px; font-weight: 800; font-size: 0.9rem; color: #e8f4e8; box-shadow: 0 4px 16px rgba(42, 90, 42, 0.15); }
+
+    .notification { position: fixed; top: 24px; right: 24px; background: rgba(8, 20, 8, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(80, 180, 80, 0.06); border-radius: 30px; padding: 16px 32px; box-shadow: 0 16px 60px rgba(0, 0, 0, 0.5); font-weight: 600; color: #d4e8d4; max-width: 440px; z-index: 1000; animation: notifSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto; cursor: default; font-size: 0.95rem; }
+    @keyframes notifSlide { 0% { transform: translateX(120%) scale(0.85); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
+    .notification-win { background: rgba(42, 90, 42, 0.95) !important; border-color: #5a9a4a !important; }
+    .notification-lose { background: rgba(90, 42, 42, 0.95) !important; border-color: #8a4a4a !important; }
+
+    .confetti-piece { position: fixed; pointer-events: none; z-index: 99999; animation: confettiFall linear forwards; border-radius: 2px; }
+    @keyframes confettiFall { 0% { opacity: 1; transform: translateY(0) rotate(0) scale(1); } 100% { opacity: 0; transform: translateY(110vh) rotate(720deg) scale(0.2); } }
+
+    .kitchen-card { background: linear-gradient(145deg, rgba(255,248,230,0.06), rgba(255,220,150,0.03)); border: 1px solid rgba(255,200,100,0.15); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.25); }
+    .cooking-pot-wrap { background: radial-gradient(ellipse at 50% 30%, rgba(80,50,20,0.35), rgba(20,12,6,0.25)); border-radius: 24px; border: 1px solid rgba(255,180,80,0.12); }
+    .cooking-pot-slot { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; position: relative; background: linear-gradient(160deg, rgba(40,26,14,0.85), rgba(24,15,8,0.9)); border: 2px dashed rgba(255,190,90,0.22); transition: all 0.25s ease; }
+    .cooking-pot-slot:hover { transform: translateY(-3px) scale(1.05); border-color: rgba(255,190,90,0.45); box-shadow: 0 8px 24px rgba(255,160,40,0.15); }
+    .cooking-pot-slot.filled { border-style: solid; background: linear-gradient(160deg, rgba(120,70,20,0.75), rgba(60,35,12,0.9)); border-color: rgba(255,170,60,0.55); box-shadow: 0 0 18px rgba(255,150,40,0.28), inset 0 0 12px rgba(255,200,120,0.15); animation: slotBubble 1.8s ease-in-out infinite; }
+    .cooking-pot-slot .slot-emoji { font-size: 1.7rem; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
+    .cooking-pot-slot .slot-remove { position: absolute; top: -7px; right: -7px; width: 20px; height: 20px; border-radius: 999px; background: #b3402a; color: #fff; font-size: 11px; line-height: 20px; text-align: center; cursor: pointer; border: none; opacity: 0; transform: scale(0.6); transition: all 0.2s ease; }
+    .cooking-pot-slot:hover .slot-remove { opacity: 1; transform: scale(1); }
+    @keyframes slotBubble { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    .plant-pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; max-height: 300px; overflow-y: auto; padding: 2px; }
+    .plant-pick { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px 8px; border-radius: 16px; cursor: pointer; background: linear-gradient(160deg, rgba(90,140,60,0.13), rgba(40,80,30,0.08)); border: 1px solid rgba(120,190,90,0.18); transition: all 0.2s ease; }
+    .plant-pick:hover { transform: translateY(-3px) scale(1.04); border-color: rgba(150,220,110,0.5); box-shadow: 0 8px 20px rgba(90,180,60,0.18); background: linear-gradient(160deg, rgba(120,180,80,0.22), rgba(60,110,40,0.12)); }
+    .plant-pick:active { transform: scale(0.96); }
+    .plant-pick .pick-emoji { font-size: 1.5rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+    .plant-pick .pick-name { font-size: 0.62rem; font-weight: 600; color: #d8cfae; text-align: center; line-height: 1.15; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .plant-pick .pick-qty { position: absolute; top: -6px; right: -6px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: linear-gradient(135deg,#f0c060,#c89030); color: #22160a; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+    /* ---- Super Event global theming ---- */
+    #super-theme-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 999990; opacity: 0; transition: opacity 1.2s ease; }
+    #super-theme-overlay.active { opacity: 1; }
+    .super-particle { position: fixed; top: -50px; pointer-events: none; z-index: 999989; animation: particleDrift linear forwards; text-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+    @keyframes particleDrift { to { transform: translateY(115vh) rotate(340deg); opacity: 0.05; } }
+    @keyframes cosmicPulse { 0%,100% { opacity: 0.85; } 50% { opacity: 1; } }
+    body.theme-toxin #super-theme-overlay { background: radial-gradient(circle at 50% 15%, rgba(90,230,140,0.20), transparent 50%), linear-gradient(180deg, rgba(30,100,55,0.28), rgba(8,45,22,0.46)); animation: cosmicPulse 4.5s ease-in-out infinite; }
+    body.theme-toxin .screen-container { border-color: rgba(110,235,150,0.4) !important; box-shadow: 0 0 60px rgba(60,200,110,0.26), inset 0 0 80px rgba(40,140,70,0.1); }
+    body.theme-hatred-glory #super-theme-overlay { background: radial-gradient(circle at 50% 110%, rgba(255,30,60,0.34), transparent 58%), radial-gradient(ellipse at 15% 10%, rgba(180,0,40,0.2), transparent 45%), linear-gradient(180deg, rgba(55,0,14,0.4), rgba(22,0,6,0.55)); animation: cosmicPulse 3s ease-in-out infinite; }
+    body.theme-hatred-glory .screen-container { border-color: rgba(255,60,90,0.45) !important; box-shadow: 0 0 70px rgba(255,40,70,0.3), inset 0 0 80px rgba(200,0,50,0.1); }
+    body.theme-pizza #super-theme-overlay { background: radial-gradient(circle at 50% 0%, rgba(255,210,60,0.30), transparent 55%), radial-gradient(circle at 85% 90%, rgba(255,160,20,0.22), transparent 50%), linear-gradient(180deg, rgba(50,35,0,0.32), rgba(28,18,0,0.48)); animation: cosmicPulse 4s ease-in-out infinite; }
+    body.theme-pizza .screen-container { border-color: rgba(255,200,60,0.45) !important; box-shadow: 0 0 70px rgba(255,190,40,0.3), inset 0 0 90px rgba(255,180,30,0.1); }
+    body.theme-rain #super-theme-overlay, body.theme-tsunami #super-theme-overlay { background: linear-gradient(180deg, rgba(20,40,70,0.38), rgba(8,18,36,0.52)); }
+    body.theme-snow #super-theme-overlay { background: linear-gradient(180deg, rgba(180,210,240,0.16), rgba(120,160,210,0.24)); }
+    body.theme-sandstorm #super-theme-overlay { background: linear-gradient(180deg, rgba(200,150,60,0.22), rgba(140,95,30,0.34)); }
+    body.theme-starfall #super-theme-overlay { background: radial-gradient(circle at 30% 10%, rgba(255,230,120,0.22), transparent 45%), linear-gradient(180deg, rgba(40,30,60,0.35), rgba(20,14,36,0.5)); animation: cosmicPulse 5s ease-in-out infinite; }
+    body.theme-lightning #super-theme-overlay { background: linear-gradient(180deg, rgba(90,70,160,0.26), rgba(30,20,50,0.42)); animation: cosmicPulse 1.6s ease-in-out infinite; }
+    body.theme-comet #super-theme-overlay { background: radial-gradient(circle at 75% 15%, rgba(150,110,255,0.25), transparent 50%), linear-gradient(180deg, rgba(25,15,50,0.4), rgba(12,8,28,0.52)); }
+    body.theme-fog #super-theme-overlay { background: linear-gradient(180deg, rgba(140,140,150,0.24), rgba(80,80,90,0.36)); }
+    body.theme-zero-gravity #super-theme-overlay { background: radial-gradient(circle at 20% 20%, rgba(90,120,255,0.22), transparent 50%), radial-gradient(circle at 75% 75%, rgba(160,90,255,0.2), transparent 50%), linear-gradient(180deg, rgba(8,10,35,0.42), rgba(4,5,22,0.55)); animation: cosmicPulse 5.5s ease-in-out infinite; }
+
+    /* ---- MIDNIGHT AUCTION HOUSE ---- */
+    .auction-page-title { background: linear-gradient(120deg,#ffe08a,#ffb347,#ffd75e,#ff9d2e,#ffe08a); background-size:300% 300%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation: goldFlow 5s ease infinite; filter: drop-shadow(0 4px 18px rgba(255,170,40,0.35)); }
+    .auction-tagline { letter-spacing: 0.4px; }
+    @keyframes goldFlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    .auction-money-pill { display:inline-flex; align-items:center; gap:6px; padding:8px 24px; border-radius:99px; background:linear-gradient(145deg,#2c2510,#191407); border:1px solid rgba(255,210,110,0.35); color:#ffd75e; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,220,140,.15); }
+    .auction-header { grid-column: 1 / -1; position:relative; overflow:hidden; display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:14px 20px 16px; border-radius:18px; background:linear-gradient(135deg, rgba(64,46,10,.88), rgba(28,20,6,.94)); border:1px solid rgba(255,200,90,.32); box-shadow:0 10px 34px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,220,140,.12); }
+    .auction-header::after { content:''; position:absolute; top:0; left:-80%; width:60%; height:100%; background:linear-gradient(105deg, transparent, rgba(255,220,130,.15), transparent); transform:skewX(-18deg); animation: aucSweep 4.5s ease-in-out infinite; pointer-events:none; }
+    @keyframes aucSweep { 0%,55%{left:-80%} 90%,100%{left:130%} }
+    .auction-gavel { font-size:2.3rem; animation: gavelHit 2.4s ease-in-out infinite; transform-origin:72% 82%; filter:drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+    @keyframes gavelHit { 0%,100%{transform:rotate(-16deg)} 12%{transform:rotate(18deg)} 24%{transform:rotate(-9deg)} 36%{transform:rotate(0)} }
+    .auction-title-sm { font-family:'Baloo 2',sans-serif; font-size:1.22rem; font-weight:800; letter-spacing:2.5px; color:#ffd75e; text-shadow:0 0 14px rgba(255,190,60,.5); }
+    .auction-sub { font-size:.76rem; color:#cfa94f; margin-top:1px; }
+    .auction-clock { margin-left:auto; text-align:center; }
+    .auction-clock-num { display:block; font-family:'Baloo 2',sans-serif; font-size:1.65rem; font-weight:800; color:#fff3d6; text-shadow:0 0 16px rgba(255,200,80,.65); line-height:1.1; }
+    .auction-clock-label { font-size:.58rem; letter-spacing:1.8px; text-transform:uppercase; color:#b98f3e; }
+    .auction-progress { flex-basis:100%; height:8px; border-radius:99px; background:rgba(0,0,0,.55); overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,.6); }
+    .auction-progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#ff9d2e,#ffd75e,#ff9d2e); background-size:200% 100%; animation:goldFlow 3s linear infinite; box-shadow:0 0 10px rgba(255,180,60,.55); transition:width 1s linear; }
+    .auction-item { position:relative; text-align:center; padding:18px 10px 14px; border-radius:20px; background:linear-gradient(165deg,#262012 0%,#14100a 100%) !important; border:1px solid rgba(255,205,105,.28) !important; box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,225,150,.14); overflow:hidden; color:#f4e3bb !important; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, border-color .25s; animation: aucCardIn .55s cubic-bezier(.2,1.4,.4,1) both; }
+    @keyframes aucCardIn { from { opacity:0; transform:translateY(22px) scale(.92); } to { opacity:1; transform:none; } }
+    .auction-item:hover { transform:translateY(-7px) scale(1.03); border-color:rgba(255,222,150,.7) !important; box-shadow:0 18px 44px rgba(255,170,50,.28), inset 0 1px 0 rgba(255,225,150,.22); z-index:2; }
+    .auction-item::before { content:''; position:absolute; top:0; left:-95%; width:70%; height:100%; background:linear-gradient(105deg, transparent, rgba(255,225,150,.17), transparent); transform:skewX(-18deg); transition:left .01s; pointer-events:none; }
+    .auction-item:hover::before { left:135%; transition:left .85s ease; }
+    .auction-emoji { font-size:2.7rem; line-height:1.1; filter:drop-shadow(0 5px 12px rgba(255,190,60,.35)); animation:aucFloat 3.2s ease-in-out infinite; }
+    @keyframes aucFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .auction-name { font-family:'Baloo 2',sans-serif; font-weight:700; font-size:.95rem; margin-top:6px; color:#ffedc9; }
+    .auction-chip { display:inline-block; margin-top:6px; font-size:.58rem; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; padding:3px 13px; border-radius:99px; background:rgba(255,190,70,.1); border:1px solid rgba(255,200,90,.42); color:#ffd75e !important; -webkit-text-fill-color:#ffd75e !important; }
+    .auction-chip.rarity-exotic, .auction-chip.rarity-iridescent { background:linear-gradient(90deg,#ff6b6b,#fcc419,#69db7c,#4dabf7,#cc5de8) !important; background-size:320% 320% !important; animation:iridescentShift 3s ease-in-out infinite !important; border-color:transparent !important; }
+    .auction-price { font-family:'Baloo 2',sans-serif; font-size:1.32rem; font-weight:800; color:#ffd75e; text-shadow:0 0 14px rgba(255,185,60,.5); margin-top:7px; }
+    .auction-deal { position:absolute; top:10px; right:10px; font-size:.6rem; font-weight:800; letter-spacing:.5px; color:#8effb1; background:rgba(25,110,55,.32); border:1px solid rgba(95,235,145,.55); padding:2px 9px; border-radius:99px; animation:dealPulse 1.6s ease-in-out infinite; backdrop-filter:blur(2px); }
+    @keyframes dealPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .auction-buy-btn { width:100%; border-radius:14px !important; min-height:38px !important; padding:6px 10px !important; background:linear-gradient(145deg,#96700f,#6b4d08) !important; border:1px solid rgba(255,210,120,.45) !important; color:#fff3d6 !important; -webkit-text-fill-color:#fff3d6 !important; box-shadow:0 5px 16px rgba(120,70,10,.45), inset 0 1px 0 rgba(255,230,160,.2); font-family:'Baloo 2',sans-serif; }
+    .auction-buy-btn:hover { transform:translateY(-2px); box-shadow:0 9px 24px rgba(255,170,50,.38); filter:brightness(1.15); }
+    .auction-buy-btn:active { transform:scale(.95); }
+
+    /* ---- SUPER EVENT DRAMA ---- */
+    body.screen-shake { animation: shakeHard .68s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shakeHard { 10%,90%{transform:translate(-2px,1px)} 20%,80%{transform:translate(4px,-2px)} 30%,50%,70%{transform:translate(-8px,4px)} 40%,60%{transform:translate(8px,-4px)} }
+    .super-announce { position:fixed; inset:0; z-index:99990; pointer-events:none; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .sa-flash { position:absolute; inset:0; background:radial-gradient(circle at 50% 45%, #fff, #ffeec2 60%, #fff); opacity:0; animation:saFlash 1s ease-out forwards; }
+    @keyframes saFlash { 0%{opacity:.9} 100%{opacity:0} }
+    .sa-ring { position:absolute; left:50%; top:50%; width:175vmax; height:175vmax; margin-left:-87.5vmax; margin-top:-87.5vmax; border-radius:50%; border:4px solid rgba(255,255,255,.7); box-shadow:0 0 70px rgba(255,255,255,.45), inset 0 0 70px rgba(255,240,200,.35); animation:saRing 1.15s cubic-bezier(.16,.84,.44,1) forwards; }
+    @keyframes saRing { 0%{transform:scale(.03); opacity:1} 100%{transform:scale(1); opacity:0} }
+    .sa-inner { position:relative; text-align:center; padding:0 4vw; animation:saPop 3.4s cubic-bezier(.2,1.4,.3,1) forwards; }
+    @keyframes saPop { 0%{transform:scale(.12) rotate(-11deg); opacity:0} 13%{transform:scale(1.22) rotate(2.5deg); opacity:1} 24%{transform:scale(.96) rotate(-1deg)} 34%,80%{transform:scale(1); opacity:1} 100%{transform:scale(1.3); opacity:0} }
+    .sa-emoji { display:block; font-size:min(18vw,112px); line-height:1.15; filter:drop-shadow(0 0 34px rgba(255,255,255,.7)); animation:saWobble 1.5s ease-in-out infinite; }
+    @keyframes saWobble { 0%,100%{transform:rotate(-8deg) scale(1)} 50%{transform:rotate(8deg) scale(1.12)} }
+    .sa-name { display:block; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:min(11vw,74px); letter-spacing:3px; line-height:1.08; background:linear-gradient(120deg,#ffffff,#ffe9a8,#ffffff,#c4e2ff,#ffffff); background-size:280% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:goldFlow 2.2s ease infinite; filter:drop-shadow(0 6px 28px rgba(255,190,70,.55)); }
+    .sa-mult { display:inline-block; margin-top:10px; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:min(5vw,28px); letter-spacing:1px; color:#141007; background:linear-gradient(120deg,#ffd75e,#ff9d2e); padding:5px 26px; border-radius:99px; box-shadow:0 0 34px rgba(255,180,60,.75), inset 0 1px 0 rgba(255,255,255,.5); }
+    .super-wheel-card { border-radius:26px; }
+    .super-wheel-card .sw-ring { position:absolute; inset:-7px; border-radius:33px; background:conic-gradient(from 0deg, #ff9d2e, #ffd75e, #cc5de8, #4dabf7, #69db7c, #ff6b6b, #ff9d2e); animation:spinHue 3.2s linear infinite; filter:blur(4px); opacity:.9; z-index:0; }
+    .super-wheel-card > :not(.sw-ring) { position:relative; z-index:1; }
+    @keyframes spinHue { to { transform:rotate(360deg); } }
+    .wheel-display.super-wheel-glow { box-shadow:0 0 34px 4px rgba(255,205,90,.4), inset 0 0 26px rgba(255,225,140,.28); animation:spin 2s linear infinite, wheelGlow 1.3s ease-in-out infinite alternate; }
+    @keyframes wheelGlow { from{box-shadow:0 0 22px 2px rgba(255,205,90,.3), inset 0 0 18px rgba(255,225,140,.2)} to{box-shadow:0 0 64px 14px rgba(255,205,90,.62), inset 0 0 30px rgba(255,225,140,.4)} }
+
+    /* ---- GLOBAL POLISH ---- */
+    .screen-container:not(.hidden) { animation: screenIn .45s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes screenIn { from { opacity:0; transform:translateY(16px) scale(.985); } to { opacity:1; transform:none; } }
+
+    /* ---- Index cards ---- */
+    .index-card { position: relative; overflow: hidden; border-radius: 18px; padding: 14px 8px 12px; text-align: center; cursor: pointer; background: linear-gradient(165deg, rgba(255,250,235,0.055), rgba(255,255,255,0.02)); border: 1px solid rgba(255,220,150,0.14); transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+    .index-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at 50% -30%, rgba(255,225,150,0.13), transparent 55%); opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+    .index-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 16px 36px rgba(0,0,0,0.4); border-color: rgba(255,210,120,0.45); }
+    .index-card:hover::after { opacity: 1; }
+    .index-card .card-emoji { font-size: 2rem; display: block; margin-bottom: 3px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
+    .index-card .card-img { width: 46px; height: 46px; object-fit: contain; display: block; margin: 0 auto 3px; filter: drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
+    .index-card:hover .card-img { animation: slotBubble 1.6s ease-in-out infinite; }
+    .index-card .card-name { font-size: .8rem; font-weight: 700; color: #e8dcbf; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; }
+
+    .hidden { display: none !important; }
+    .screen-shake { animation: shake 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes shake { 0%, 100% { transform: translate(0); } 10% { transform: translate(-8px, 4px); } 30% { transform: translate(8px, -4px); } 50% { transform: translate(-6px, 6px); } 70% { transform: translate(6px, -2px); } 90% { transform: translate(-4px, 2px); } }
+
+    .inv-card, .shop-card { background: rgba(20, 50, 20, 0.2); backdrop-filter: blur(8px); border: 1px solid rgba(80, 180, 80, 0.04); border-radius: 28px; padding: 16px 12px; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05); min-height: 140px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #d4e8d4; cursor: pointer; position: relative; overflow: hidden; }
+    .inv-card:hover, .shop-card:hover { transform: translateY(-8px) scale(1.03); border-color: rgba(80, 180, 80, 0.1); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); background: rgba(20, 50, 20, 0.35); }
+    .shop-card .buy-btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+    .shop-card .buy-btn-group .vine-btn { font-size: 0.75rem; padding: 6px 14px; min-height: 34px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(24px); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeInModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes fadeInModal { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
+    .modal-card { background: rgba(8, 20, 8, 0.98); backdrop-filter: blur(24px); border-radius: 48px; max-width: 660px; width: 100%; max-height: 92vh; overflow-y: auto; padding: 36px; border: 1px solid rgba(80, 180, 80, 0.04); box-shadow: 0 32px 100px rgba(0, 0, 0, 0.5); animation: slideUpModal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); color: #d4e8d4; }
+    @keyframes slideUpModal { 0% { opacity: 0; transform: translateY(40px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-card h2 { font-size: 2rem; font-weight: 700; text-align: center; background: linear-gradient(135deg, #7ad07a, #4a9a4a, #2d7a2d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+    .modal-card .sub { text-align: center; color: #8aa88a; margin-bottom: 16px; font-size: 0.95rem; }
+    .modal-card .close-modal-btn { margin-top: 20px; background: linear-gradient(145deg, #3a5a3a, #2a4a2a); border: none; color: #e8f4e8; padding: 12px 32px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: inline-block; width: 100%; text-align: center; }
+    .modal-card .close-modal-btn:hover { transform: scale(1.02); background: #4a6a4a; }
+
+    .pack-select-area { background: rgba(20, 50, 20, 0.1); border-radius: 20px; padding: 12px 16px; margin-bottom: 12px; border: 1px solid rgba(80, 180, 80, 0.03); }
+    .pack-option { display: inline-block; background: rgba(60, 140, 60, 0.06); border: 1px solid rgba(80, 180, 80, 0.04); border-radius: 40px; padding: 4px 16px; font-size: 0.8rem; color: #b8d8b8; cursor: pointer; margin: 4px 4px; transition: all 0.2s ease; }
+    .pack-option:hover { background: rgba(80, 180, 80, 0.1); transform: scale(1.04); }
+    .pack-option.selected { border-color: #5a9a4a; background: rgba(80, 180, 80, 0.12); box-shadow: 0 0 20px rgba(80, 180, 80, 0.05); }
+    .pack-option .qty-badge { background: rgba(80, 180, 80, 0.1); border-radius: 30px; padding: 0 8px; font-size: 0.65rem; color: #7ad07a; }
+
+    .slot-display { text-align: center; padding: 16px; background: rgba(8, 20, 8, 0.3); border-radius: 30px; border: 1px solid rgba(80, 180, 80, 0.02); margin: 12px 0; }
+    .slot-display .result-emoji { font-size: 3.6rem; display: block; }
+    .slot-display .result-name { font-size: 1.2rem; font-weight: 700; color: #d4e8d4; }
+    .slot-display .result-rarity { font-size: 0.7rem; font-weight: 700; padding: 2px 14px; border-radius: 30px; display: inline-block; margin-top: 4px; }
+    .odds-table { max-height: 160px; overflow-y: auto; background: rgba(8, 20, 8, 0.2); border-radius: 20px; padding: 8px 12px; margin: 8px 0; }
+    .odds-table .row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(80, 180, 80, 0.02); font-size: 0.8rem; }
+    .odds-table .row .seed-name { display: flex; align-items: center; gap: 6px; }
+    .odds-table .row .seed-chance { color: #8aa88a; }
+
+    .auto-roll-toggle-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; font-size: 0.85rem; color: #8aa88a; }
+    .auto-roll-btn { background: rgba(60, 140, 60, 0.06); border: 1px solid rgba(80, 180, 80, 0.04); border-radius: 40px; padding: 4px 20px; font-weight: 700; font-size: 0.75rem; color: #8aa88a; cursor: pointer; transition: all 0.2s ease; }
+    .auto-roll-btn:hover { background: rgba(80, 180, 80, 0.08); }
+    .auto-roll-btn.active { background: rgba(80, 180, 80, 0.12); border-color: rgba(80, 180, 80, 0.1); color: #7ad07a; }
+    .auto-roll-status { font-size: 0.7rem; color: #6a8a6a; }
+    .auto-roll-status.rolling { color: #7ad07a; animation: pulseText 1s ease-in-out infinite alternate; }
+    @keyframes pulseText { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    .welcome-container { min-height: 80vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at 30% 40%, rgba(80, 180, 80, 0.08), transparent 70%), radial-gradient(ellipse at 70% 60%, rgba(40, 160, 200, 0.06), transparent 60%); }
+    .welcome-card { background: rgba(10, 30, 10, 0.7); backdrop-filter: blur(30px); border: 1px solid rgba(80, 180, 80, 0.08); border-radius: 80px; padding: 60px 50px; max-width: 600px; width: 100%; text-align: center; box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.02); animation: floatIn 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes floatIn { 0% { opacity: 0; transform: translateY(40px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .welcome-card .logo { font-size: 4.5rem; display: block; margin-bottom: 8px; filter: drop-shadow(0 0 40px rgba(80, 180, 80, 0.2)); }
+    .welcome-card h1 { font-size: 3.4rem; font-weight: 800; background: linear-gradient(135deg, #7ad07a, #4a9a4a, #2d7a2d, #4a9a4a); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 4s ease-in-out infinite; margin-bottom: 8px; letter-spacing: -1px; }
+    @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .welcome-card .subtitle { font-size: 1.2rem; color: #aac8aa; margin-bottom: 30px; font-weight: 400; letter-spacing: 2px; opacity: 0.9; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3); }
+    .welcome-card .input-group { display: flex; flex-direction: column; gap: 16px; }
+    .welcome-card .input-group input { padding: 16px 24px; border-radius: 60px; border: 2px solid rgba(80, 180, 80, 0.1); background: rgba(255, 255, 255, 0.04); color: #d4e8d4; font-size: 1.1rem; text-align: center; outline: none; transition: all 0.3s; backdrop-filter: blur(4px); }
+    .welcome-card .input-group input:focus { border-color: rgba(80, 180, 80, 0.3); box-shadow: 0 0 30px rgba(80, 180, 80, 0.05); }
+    .welcome-card .start-btn { padding: 18px 40px; border-radius: 60px; background: linear-gradient(145deg, #4a8a3a, #2d6a2d); border: none; color: #fff; font-size: 1.4rem; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 40px rgba(42, 90, 42, 0.2); }
+    .welcome-card .start-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 60px rgba(42, 90, 42, 0.3); background: linear-gradient(145deg, #5a9a4a, #3a7a3a); }
+    .welcome-features { display: flex; justify-content: center; gap: 30px; margin-top: 30px; color: rgba(180, 200, 180, 0.5); font-size: 0.9rem; font-weight: 500; }
+
+    @media (max-width: 768px) { .plant-slot { width: 52px; height: 52px; font-size: 22px; } .welcome-card { padding: 40px 24px; border-radius: 50px; } .welcome-card h1 { font-size: 2.6rem; } .welcome-features { gap: 16px; flex-wrap: wrap; } }
+    @media (max-width: 480px) { .plant-slot { width: 44px; height: 44px; font-size: 18px; } .screen-container { padding: 16px; margin: 8px; border-radius: 32px; } .top-nav .nav-link { font-size: 0.6rem; padding: 4px 10px; } .welcome-card { padding: 28px 16px; } .welcome-card h1 { font-size: 2.2rem; } .welcome-card .logo { font-size: 3.5rem; } }
+  
+    .abuse-section { background: rgba(40,20,60,0.25); border:1px solid rgba(180,120,255,0.15); border-radius:28px; padding:20px; margin-bottom:16px; }
+    .abuse-section h4 { font-weight:700; color:#c9a4ff; margin-bottom:12px; font-size:1.05rem; }
+    .abuse-btn { background:linear-gradient(145deg,#7a3ac0,#5a2a90); border:none; color:#fff; padding:10px 16px; border-radius:40px; font-weight:700; font-size:0.8rem; cursor:pointer; margin:4px; transition:all 0.2s; }
+    .abuse-btn:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(122,58,192,0.35); }
+
+    /* ==================== AETHELGARD SANCTUARY ==================== */
+    .sanctum-screen { position: relative; }
+    .sanctum-screen::before { content:''; position:absolute; inset:-20px; z-index:0; background:
+      radial-gradient(ellipse 60% 50% at 25% 40%, rgba(40,60,160,0.18), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 75% 55%, rgba(180,140,40,0.12), transparent 70%),
+      radial-gradient(ellipse 40% 40% at 50% 80%, rgba(200,40,80,0.10), transparent 70%);
+      animation: nebulaSwirl 22s ease-in-out infinite alternate; pointer-events:none; }
+    @keyframes nebulaSwirl { 0%{ opacity:.5; transform:scale(1) rotate(0);} 100%{ opacity:1; transform:scale(1.12) rotate(8deg);} }
+    .sanctum-grid { position:relative; z-index:1; }
+    .sanctum-constellation { letter-spacing:.3em; font-size:1.2rem; text-align:center; opacity:.7; animation: constellationPulse 4s ease-in-out infinite; }
+    @keyframes constellationPulse { 0%,100%{ opacity:.35;} 50%{ opacity:.9;} }
+    .obelisk { display:inline-block; font-size:4rem; filter:drop-shadow(0 0 30px rgba(160,140,60,0.5)); animation: obeliskFloat 6s ease-in-out infinite; }
+    @keyframes obeliskFloat { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+    .token-counter { display:inline-flex; align-items:center; gap:8px; font-size:1.3rem; font-weight:800; color:#ffd76a; text-shadow:0 0 18px rgba(255,215,106,0.6); padding:8px 18px; border-radius:40px; border:1px solid rgba(255,215,106,0.35); background:rgba(20,18,8,0.5); animation: tokenGlow 2s ease-in-out infinite; }
+    @keyframes tokenGlow { 0%,100%{ box-shadow:0 0 10px rgba(255,215,106,0.25);} 50%{ box-shadow:0 0 26px rgba(255,215,106,0.6);} }
+    .singularity-card { border-radius:30px; padding:28px; border:1px solid rgba(255,60,40,0.25); background:
+      radial-gradient(circle at 50% 0%, rgba(120,0,0,0.35), rgba(10,2,6,0.85) 70%); box-shadow:0 0 60px rgba(200,20,20,0.25), inset 0 0 60px rgba(255,60,40,0.08); text-align:center; }
+    .singularity-btn { width:100%; padding:26px 10px; border-radius:60px; border:none; cursor:pointer; font-size:1.5rem; font-weight:900; color:#fff; letter-spacing:.06em;
+      background:radial-gradient(circle at 35% 30%, #ff3a2a, #8a1208 60%, #2a0204); box-shadow:0 0 0 rgba(255,40,20,0.55); animation: supernovaPulse 2.2s ease-in-out infinite; transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+    .singularity-btn:hover:not(:disabled) { transform:scale(1.04); }
+    .singularity-btn:disabled { opacity:.45; cursor:not-allowed; animation:none; }
+    @keyframes supernovaPulse { 0%,100%{ box-shadow:0 0 14px rgba(255,60,30,0.4);} 50%{ box-shadow:0 0 42px rgba(255,80,40,0.8);} }
+    .sanctum-panel { border-radius:24px; border:1px solid rgba(90,160,255,0.18); background:rgba(6,8,20,0.45); backdrop-filter:blur(8px); padding:18px; }
+    .sanctum-upgrade { border-radius:16px; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.03); padding:10px 12px; margin-bottom:10px; }
+    .scroll-row { display:flex; align-items:center; gap:12px; }
+    .up-icon { font-size:1.6rem; }
+    .scroll-body { flex:1; min-width:0; }
+    .scroll-name { font-weight:800; color:#e8ecff; font-size:.95rem; }
+    .scroll-desc { font-size:.78rem; color:rgba(200,210,255,0.55); }
+    .scroll-owned { font-size:.75rem; color:rgba(255,215,106,0.75); margin-top:2px; }
+    .up-buy { border:none; border-radius:30px; padding:8px 12px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.08); color:#9aa6cc; white-space:nowrap; }
+    .up-buy.can { background:linear-gradient(145deg,#6a5acd,#3a3aa8); color:#fff; box-shadow:0 0 16px rgba(110,90,220,0.4); }
+    .up-buy:disabled { cursor:not-allowed; opacity:.6; }
+    .vault-item { display:flex; align-items:center; gap:12px; border-radius:16px; padding:12px; margin-bottom:10px; border:1px solid rgba(255,180,60,0.2); background:linear-gradient(145deg, rgba(40,20,5,0.5), rgba(10,5,2,0.5)); }
+    .vault-item.owned { border-color:rgba(90,240,140,0.35); }
+    .vault-icon { font-size:2rem; filter:drop-shadow(0 0 12px rgba(255,200,80,0.4)); animation: obeliskFloat 5s ease-in-out infinite; }
+    .vault-body { flex:1; min-width:0; }
+    .vault-name { font-weight:800; color:#ffe9c2; }
+    .vault-desc { font-size:.76rem; color:rgba(255,220,170,0.55); }
+    .vault-buy { border:none; border-radius:30px; padding:8px 12px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.08); color:#d4b180; white-space:nowrap; }
+    .vault-buy.can { background:linear-gradient(145deg,#c98a2a,#8a5a12); color:#fff; box-shadow:0 0 16px rgba(220,160,60,0.45); }
+    .vault-buy:disabled { cursor:not-allowed; opacity:.6; }
+    .rarity-badge.rarity-transcendent { background:linear-gradient(145deg,#ffd76a,#c98a2a); color:#2a1a04; box-shadow:0 0 14px rgba(255,215,106,0.5); }
+    @media (max-width:768px){ .sanctum-grid { gap:10px; } }
+
+
+    /*************** WELCOME COSMOS ***************/
+    @keyframes welcomeGrad { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+    @keyframes twinkle { 0%,100% { opacity: .15; transform: scale(.8);} 50% {opacity: 1; transform: scale(1.15);} }
+    @keyframes driftAura { 0% {transform: translateX(-8%) translateY(0%);} 50% {transform: translateX(8%) translateY(-6%);} 100% {transform: translateX(-8%) translateY(0%);} }
+    @keyframes floatFlora { 0%,100% {transform: translateY(0) rotate(-2deg);} 50% {transform: translateY(-14px) rotate(3deg);} }
+    @keyframes shimmerMove { 0% {background-position: 200% 0;} 100% {background-position: -200% 0;} }
+    @keyframes pulseGlow { 0%,100% {box-shadow: 0 0 18px rgba(56,189,248,.5);} 50% {box-shadow: 0 0 36px rgba(167,139,250,.95);} }
+    .welcome-screen { position: relative; min-height: 86vh; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 24px; }
+    .welcome-screen::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg,#0f172a,#1e1b4b,#4c1d95,#7c2d12,#0f172a); background-size: 400% 400%; animation: welcomeGrad 16s ease infinite; }
+    .welcome-sky { position: absolute; inset: 0; overflow: hidden; }
+    .welcome-star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px rgba(255,255,255,.9); animation: twinkle 3s ease-in-out infinite; }
+    .welcome-aura { position: absolute; width: 55vw; height: 38vh; border-radius: 50%; filter: blur(70px); opacity: .35; animation: driftAura 18s ease-in-out infinite; }
+    .welcome-flora { position: absolute; font-size: 2.6rem; opacity: .5; animation: floatFlora 9s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(255,255,255,.35)); }
+    .welcome-card { position: relative; z-index: 2; text-align: center; padding: 46px 52px; border-radius: 26px; background: rgba(15,23,42,.45); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.25); box-shadow: 0 24px 70px rgba(0,0,0,.55), inset 0 0 60px rgba(255,255,255,.05); animation: pulseGlow 5s ease-in-out infinite; }
+    .welcome-badge { font-size: 3.4rem; display: inline-block; animation: floatFlora 6s ease-in-out infinite; filter: drop-shadow(0 0 14px rgba(255,215,0,.6)); }
+    .welcome-title { font-size: 3rem; font-weight: 900; letter-spacing: .5px; margin: 10px 0 4px; background: linear-gradient(90deg,#a5f3fc,#c4b5fd,#fcd34d,#a5f3fc); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmerMove 6s linear infinite; }
+    .welcome-sub { margin-bottom: 20px; font-size: 1.05rem; opacity: .92; }
+    .welcome-features span { background: rgba(255,255,255,.09); padding: 6px 12px; border-radius: 999px; }
+    .welcome-screen .start-btn { width: 100%; margin-top: 14px; background: linear-gradient(90deg,#0ea5e9,#8b5cf6,#0ea5e9); background-size: 200% auto; animation: shimmerMove 3.5s linear infinite; border: none; color: #fff; font-weight: 800; font-size: 1.15rem; padding: 15px 24px; border-radius: 14px; box-shadow: 0 10px 30px rgba(14,165,233,.45); }
+    .welcome-screen .start-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(139,92,246,.6); }
+    .load-btn { width: 100%; margin-top: 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff; font-weight: 700; padding: 11px 20px; border-radius: 12px; cursor: pointer; transition: .2s; }
+    .load-btn:hover { background: rgba(255,255,255,.22); }
+    .version-footer { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: .8rem; opacity: .55; letter-spacing: 1px; z-index: 2; }
+</style>
+</head>
+<body>
+  <div id="app" class="min-h-screen p-4 relative">
+    <!-- TOP NAV -->
+    <nav class="top-nav" id="top-nav">
+      <div class="nav-brand">🌿 <span id="nav-brand-name">Garden Oasis</span></div>
+      <button class="nav-link active" data-screen="garden">🌱 Garden</button>
+      <button class="nav-link" data-screen="shop">🌰 Shop</button>
+      <button class="nav-link" data-screen="inventory">📦 Inv</button>
+      <button class="nav-link" data-screen="pets">🐠 Pets</button>
+      <button class="nav-link" data-screen="gear">⚙️ Gear</button>
+      <button class="nav-link" data-screen="sell">💰 Sell</button>
+      <button class="nav-link" data-screen="index">📋 Index</button>
+      <button class="nav-link" data-screen="auction">🏷️ Auction</button>
+      <button class="nav-link" data-screen="ascend">⬆️ Rebirth</button>
+      <button class="nav-link" data-screen="dlc">🎫 DLC</button>
+      <button class="nav-link" data-screen="events">🎉 Events</button>
+      <button class="nav-link" data-screen="petclub">🐾 Club</button>
+      <button class="nav-link" data-screen="travel">🚀 Travel</button>
+      <button class="nav-link" id="nav-admin-btn" data-screen="admin" style="display:none;">🛠️</button>
+      <button class="nav-link" data-screen="settings">⚙️</button>
+      <div class="nav-right">
+        <span class="stat-pill">💰 <span class="num" id="nav-money">100</span></span>
+        <span class="stat-pill">💧 <span class="num" id="nav-water">10</span></span>
+        <span class="stat-pill">⏱️ <span class="num" id="nav-playtime">0</span>m</span>
+        <span class="stat-pill">☀️ <span class="num" id="nav-tokens">0</span></span>
+        <span class="stat-pill">🐾 <span class="num" id="nav-pet-count">0</span></span>
+      </div>
+    </nav>
+
+    <!-- WELCOME -->
+    <div id="welcome-screen" class="screen-container welcome-screen">
+      <div class="welcome-sky"></div>
+      <div class="welcome-card">
+        <span class="welcome-badge">🌿</span>
+        <h1 class="welcome-title">Garden Oasis</h1>
+        <p class="welcome-sub">🌊 Embark on a magical gardening adventure</p>
+        <div class="input-group">
+          <input type="text" id="player-name-input" placeholder="Enter your name..." maxlength="20" />
+          <button id="confirm-name-btn" class="start-btn" onclick="(function(){ if (window.__startHandled) { return; } if (typeof goGarden === 'function') { goGarden(); return; } var why = window.__bootError ? ('Game error: ' + window.__bootError) : 'game.js is missing or didn't load. Extract BOTH index.html and game.js from the zip into the SAME folder, then open index.html again.'; alert(why); })()">🌟 Start Your Garden Adventure</button>
+        </div>
+        <button id="load-game-btn" class="load-btn" style="display:none;">💾 Load Game</button>
+        <div class="welcome-features"><span>🌱 Plant &amp; Grow</span><span>🐠 Pets Wander</span><span>🎲 Double or Nothing</span></div>
+      </div>
+      <div class="version-footer">🌿 THE ETERNAL GARDEN · v12.0 · Aethelgard Rebirth</div>
+    </div>
+
+    <!-- GARDEN -->
+    <div id="garden-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <div class="p-6 mb-6 bg-gradient-to-r from-yellow-100/5 to-orange-100/5 rounded-4xl border border-amber-200/10">
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <h1 class="text-4xl font-bold" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🌿 Garden Oasis</h1>
+          <div class="text-center"><div class="text-2xl font-bold text-amber-800">🧑‍🌾 <span id="player-name-display">Gardener</span></div></div>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="bg-white/5 px-3 py-1 rounded-xl border border-amber-200/10 text-amber-800"><span class="font-bold">💰 $</span><span id="money">100</span></div>
+            <div class="bg-white/5 px-3 py-1 rounded-xl"><span class="font-bold text-amber-800">💧 </span><span id="water">10</span></div>
+            <div class="bg-white/5 px-3 py-1 rounded-xl"><span class="font-bold text-amber-800">⏱️ </span><span id="playtime">0</span><span class="text-amber-800">m</span></div>
+            <div class="bg-white/5 px-3 py-1 rounded-xl"><span class="font-bold text-amber-800">☀️ Tokens: </span><span id="summer-tokens-display">0</span></div>
+          </div>
+        </div>
+        <div class="bg-white/5 rounded-xl p-2 flex justify-between items-center text-sm flex-wrap gap-2 border border-amber-200/10">
+          <span class="text-amber-800">⬆️ <span class="font-bold">Rebirths:</span> <span id="ascend-count-display" class="text-amber-700">0</span></span>
+          <span class="text-amber-800">📈 <span class="font-bold">Grow Speed:</span> <span id="ascend-grow-display" class="text-amber-700">+0%</span></span>
+          <span class="text-amber-800">💰 <span class="font-bold">Sell Bonus:</span> <span id="ascend-sell-display" class="text-amber-700">+0%</span></span>
+          <button id="ascend-btn-header" class="vine-btn vine-btn-gold text-sm py-1 px-4">⬆️ Rebirth</button>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50/5 rounded-4xl p-6 mb-6 relative border border-amber-200/10" id="garden-container">
+        <h3 class="text-2xl font-bold text-center mb-4 text-amber-800">🌱 Your Garden</h3>
+        <div class="garden-wrapper relative">
+          <div class="garden-container relative max-w-md mx-auto mb-2 flex flex-wrap items-start justify-center gap-6">
+            <div id="garden-grid" class="grid grid-cols-6 gap-2 relative z-10"></div>
+            <div class="seedpack-machine" id="seedpack-machine-btn">
+              <span class="machine-emoji">🎰</span>
+              <span class="machine-label">Seed Pack</span>
+              <span class="count-badge" id="seedpack-count">0</span>
+            </div>
+          </div>
+          <div class="text-center text-sm text-amber-700/60 mt-4 relative z-10">
+            <span>🌱 Click empty soil to plant • Click grown plants to harvest</span>
+            <span class="block text-xs text-amber-600/60 mt-1">💧 Watered plants grow 2x faster!</span>
+            <span class="block text-xs text-amber-600/60 mt-1" id="mode-indicator"></span>
+            <span class="block text-xs text-cyan-600/60 mt-1" id="sprinkler-mode-indicator"></span>
+            <span class="block text-xs text-purple-600/60 mt-1" id="event-status"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50/5 rounded-3xl p-6 mb-6 border border-amber-200/10">
+        <h3 class="text-xl font-bold text-center mb-4 text-amber-800">🔧 Garden Tools</h3>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button id="water-plants-btn" class="vine-btn vine-btn-ocean">💧 Water Plants</button>
+          <button id="expand-garden-btn" class="vine-btn vine-btn-gold">🏗️ Expand ($200)</button>
+          <button id="toggle-animations-btn" class="vine-btn" style="background:linear-gradient(145deg,#3a7a8a,#2a5a6a);">🎨 Animations: ON</button>
+          <button id="grow-times-btn" class="vine-btn" style="background:linear-gradient(145deg,#4a8a3a,#2d6a2d);">⏱️ Grow Times</button>
+        </div>
+        <div class="flex flex-wrap gap-3 justify-center mt-3 pt-2">
+          <button id="reclaimer-mode-btn" class="vine-btn" style="background:linear-gradient(145deg,#6a8a3a,#4a6a2a);">🔄 Reclaimer Mode</button>
+          <button id="shovel-mode-btn" class="vine-btn vine-btn-danger">⛏️ Shovel Mode</button>
+          <button id="cancel-placement-btn" class="vine-btn hidden" style="background:linear-gradient(145deg,#4a5a4a,#3a4a3a);">❌ Cancel Sprinkler</button>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50/5 rounded-3xl p-6 border border-amber-200/10">
+        <h3 class="text-xl font-bold text-center mb-4 text-amber-800">🚪 Explore</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <button class="vine-btn nav-link" data-screen="inventory">📦 Inventory</button>
+          <button class="vine-btn vine-btn-gold nav-link" data-screen="shop">🌱 Seed Shop</button>
+          <button class="vine-btn vine-btn-berry nav-link" data-screen="pets">🐠 Pet Store</button>
+          <button class="vine-btn vine-btn-ocean nav-link" data-screen="gear">⚙️ Gear Shop</button>
+          <button class="vine-btn nav-link" data-screen="events" style="background:linear-gradient(145deg,#8a4a6a,#6a3050);">🎉 Events</button>
+          <button class="vine-btn nav-link" data-screen="sell" style="background:linear-gradient(145deg,#8a6a3a,#6a4a2a);">💰 Sell</button>
+          <button class="vine-btn vine-btn-berry nav-link" data-screen="dlc">🎫 DLC</button>
+          <button class="vine-btn vine-btn-gold nav-link" data-screen="index">📋 Index</button>
+          <button class="vine-btn vine-btn-sun nav-link" data-screen="auction">🏷️ Auction</button>
+          <button class="vine-btn vine-btn-gold nav-link" data-screen="ascend">⬆️ Rebirth</button>
+          <button class="vine-btn vine-btn-purple nav-link" data-screen="petclub">🐾 Pet Club</button>
+          <button class="vine-btn nav-link" data-screen="travel" style="background:linear-gradient(145deg,#2a6a7a,#1a4a5a);">🚀 Travel</button>
+          <button class="vine-btn nav-link" data-screen="settings" style="background:linear-gradient(145deg,#4a5a6a,#3a4a5a);">⚙️ Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="inventory-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">📦 Inventory</h2>
+      <div class="sort-controls mt-3 mb-4" style="background:rgba(20,50,20,0.15);border-radius:30px;padding:14px 22px;border:1px solid rgba(80,180,80,0.03);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;">
+        <div class="left-group" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <label style="font-size:0.8rem;color:#8aa88a;font-weight:600;">Sort:</label>
+          <select id="inv-sort-type" style="background:rgba(12,30,12,0.6);border:1px solid rgba(80,180,80,0.06);border-radius:40px;padding:6px 18px;color:#d4e8d4;font-size:0.8rem;outline:none;transition:all 0.2s ease;cursor:pointer;">
+            <option value="type">Type</option>
+            <option value="rarity">Rarity</option>
+            <option value="name">Alphabetical</option>
+            <option value="value">Value</option>
+          </select>
+          <button class="sort-btn active" id="inv-sort-asc" style="background:rgba(60,140,60,0.06);border:1px solid rgba(80,180,80,0.03);border-radius:40px;padding:6px 18px;font-size:0.7rem;color:#8aa88a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">⬆️ Asc</button>
+          <button class="sort-btn" id="inv-sort-desc" style="background:rgba(60,140,60,0.06);border:1px solid rgba(80,180,80,0.03);border-radius:40px;padding:6px 18px;font-size:0.7rem;color:#8aa88a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">⬇️ Desc</button>
+        </div>
+        <div class="right-group" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <div class="filter-group" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="filter-chip active" data-filter="all" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">All</span>
+            <span class="filter-chip" data-filter="seed" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Seeds</span>
+            <span class="filter-chip" data-filter="plant" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Plants</span>
+            <span class="filter-chip" data-filter="gear" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Gears</span>
+            <span class="filter-chip" data-filter="sprinkler" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Sprinklers</span>
+            <span class="filter-chip" data-filter="tool" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Tools</span>
+            <span class="filter-chip" data-filter="seedpack" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Seed Packs</span>
+            <span class="filter-chip" data-filter="food" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Foods</span>
+          </div>
+        </div>
+      </div>
+      <div id="inventory-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6"></div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- SHOP -->
+    <div id="shop-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🌱 Seed Shop</h2>
+      <div class="mb-4 p-4 bg-white/5 rounded-xl"><p class="text-center font-bold text-amber-800">⏰ Stock refreshes in: <span id="stock-timer" class="text-amber-700">3:00</span></p></div>
+      <div class="flex justify-center gap-2 mb-4 flex-wrap">
+        <button class="shop-filter-btn active" data-filter="all" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">All</button>
+        <button class="shop-filter-btn" data-filter="common" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Common</button>
+        <button class="shop-filter-btn" data-filter="rare" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Rare</button>
+        <button class="shop-filter-btn" data-filter="mythic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Mythic</button>
+        <button class="shop-filter-btn" data-filter="divine" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Divine</button>
+        <button class="shop-filter-btn" data-filter="prismatic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Prismatic</button>
+        <button class="shop-filter-btn" data-filter="exotic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Exotic</button>
+        <button class="shop-filter-btn" data-filter="iridescent" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Transcendent</button>
+      </div>
+      <div id="shop-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"></div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- PETS -->
+    <div id="pets-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#8a5a7a,#6a3a5a,#5a2a4a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🐠 Pet Store</h2>
+      <div class="mb-4 p-4 bg-white/5 rounded-xl"><p class="text-center font-bold text-amber-800">🔄 Stock refreshes in: <span id="pet-stock-timer" class="text-amber-700 font-bold">10:00</span></p></div>
+      <div class="flex justify-center gap-2 mb-4 flex-wrap">
+        <button class="pet-filter-btn active" data-filter="all" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">All</button>
+        <button class="pet-filter-btn" data-filter="summer" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">☀️ Summer</button>
+        <button class="pet-filter-btn" data-filter="money" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">💰 Money</button>
+        <button class="pet-filter-btn" data-filter="mutation" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">🧬 Mutation</button>
+        <button class="pet-filter-btn" data-filter="water" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">💧 Water</button>
+        <button class="pet-filter-btn" data-filter="passive" style="background:rgba(140,90,120,0.08);border:1px solid rgba(200,120,160,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#d8a0c8;cursor:pointer;transition:all 0.2s ease;font-weight:600;">🌱 Passive</button>
+      </div>
+      <div id="pets-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"></div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- GEAR -->
+    <div id="gear-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#3a7a8a,#2a5a6a,#1a3a4a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⚙️ Gear Shop</h2>
+      <div class="flex justify-center gap-2 mb-4 flex-wrap">
+        <button class="gear-filter-btn active" data-filter="all" style="background:rgba(60,120,140,0.08);border:1px solid rgba(80,180,200,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#7ab8cc;cursor:pointer;transition:all 0.2s ease;font-weight:600;">All</button>
+        <button class="gear-filter-btn" data-filter="tools" style="background:rgba(60,120,140,0.08);border:1px solid rgba(80,180,200,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#7ab8cc;cursor:pointer;transition:all 0.2s ease;font-weight:600;">🛠️ Tools</button>
+        <button class="gear-filter-btn" data-filter="sprinklers" style="background:rgba(60,120,140,0.08);border:1px solid rgba(80,180,200,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#7ab8cc;cursor:pointer;transition:all 0.2s ease;font-weight:600;">💧 Sprinklers</button>
+        <button class="gear-filter-btn" data-filter="summer" style="background:rgba(60,120,140,0.08);border:1px solid rgba(80,180,200,0.12);border-radius:40px;padding:4px 16px;font-size:0.7rem;color:#7ab8cc;cursor:pointer;transition:all 0.2s ease;font-weight:600;">☀️ Summer</button>
+      </div>
+      <div id="gear-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- SELL -->
+    <div id="sell-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">💰 Sell</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white/5 p-6 rounded-2xl border border-amber-200/10 text-center"><div class="text-5xl mb-2">🌱</div><div class="text-xl font-bold text-center text-amber-800">Sell Individual Plant</div><button id="sell-one-btn" class="w-full vine-btn mt-4">Select Plant</button></div>
+        <div class="bg-white/5 p-6 rounded-2xl border border-amber-200/10 text-center"><div class="text-5xl mb-2">🏪</div><div class="text-xl font-bold text-center text-amber-800">Sell Everything</div><button id="sell-all-btn" class="w-full vine-btn vine-btn-danger mt-4">Sell All</button></div>
+      </div>
+      <div class="bg-white/5 p-6 rounded-2xl border border-amber-200/10 mt-6 mb-6 text-center">
+        <h3 class="text-2xl font-bold text-amber-800">🎲 DOUBLE OR NOTHING</h3>
+        <p class="text-lg text-amber-700/60 mb-4">You have <span id="gamble-count" class="font-bold text-amber-800">0</span> harvestable items</p>
+        <div id="gamble-inventory-preview" class="max-h-40 overflow-y-auto bg-white/5 rounded-xl p-3 mb-4 text-sm text-amber-800"></div>
+        <button id="gamble-spin-btn" class="vine-btn vine-btn-sun text-xl py-4 px-8">🎲 SPIN!</button>
+      </div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- INDEX -->
+    <div id="index-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">📋 Complete Index</h2>
+      <div class="index-counters flex flex-wrap gap-2 justify-center mb-3">
+        <span class="bg-white/5 px-4 py-1 rounded-full text-sm text-amber-800 border border-amber-200/10">🌱 Plants: <span class="num text-amber-700 font-bold" id="idx-plants">0</span></span>
+        <span class="bg-white/5 px-4 py-1 rounded-full text-sm text-amber-800 border border-amber-200/10">🌰 Seeds: <span class="num text-amber-700 font-bold" id="idx-seeds">0</span></span>
+        <span class="bg-white/5 px-4 py-1 rounded-full text-sm text-amber-800 border border-amber-200/10">⚙️ Gears: <span class="num text-amber-700 font-bold" id="idx-gears">0</span></span>
+        <span class="bg-white/5 px-4 py-1 rounded-full text-sm text-amber-800 border border-amber-200/10">🍳 Foods: <span class="num text-amber-700 font-bold" id="idx-foods">0</span></span>
+      </div>
+      <div class="flex justify-center gap-2 mt-3 flex-wrap">
+        <button class="index-tab active" data-tab="plants" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">🌱 Plants</button>
+        <button class="index-tab" data-tab="seeds" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">🌰 Seeds</button>
+        <button class="index-tab" data-tab="pets" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">🐠 Pets</button>
+        <button class="index-tab" data-tab="traits" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">✨ Mutations</button>
+        <button class="index-tab" data-tab="special" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">💎 Special Traits</button>
+        <button class="index-tab" data-tab="superweather" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">🌪️ Super Weathers</button>
+        <button class="index-tab" data-tab="foods" style="cursor:pointer;padding:6px 20px;border-radius:40px;font-weight:600;font-size:0.85rem;transition:all 0.2s ease;background:rgba(60,140,60,0.04);border:1px solid transparent;color:#6a8a6a;">🍳 Foods</button>
+      </div>
+      <div class="flex justify-center gap-2 mt-3 flex-wrap">
+        <button class="filter-btn active" data-filter="all" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">All</button>
+        <button class="filter-btn" data-filter="common" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Common</button>
+        <button class="filter-btn" data-filter="rare" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Rare</button>
+        <button class="filter-btn" data-filter="mythic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Mythic</button>
+        <button class="filter-btn" data-filter="divine" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Divine</button>
+        <button class="filter-btn" data-filter="prismatic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Prismatic</button>
+        <button class="filter-btn" data-filter="exotic" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Exotic</button>
+        <button class="filter-btn" data-filter="iridescent" style="background:rgba(60,140,60,0.04);border:1px solid rgba(80,180,80,0.02);border-radius:40px;padding:4px 16px;font-size:0.65rem;color:#6a8a6a;cursor:pointer;transition:all 0.2s ease;font-weight:600;">Transcendent</button>
+      </div>
+      <div id="index-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-6"></div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- AUCTION -->
+    <div id="auction-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="auction-page-title text-4xl font-bold text-center">🔨 Midnight Auction House</h2>
+      <p class="auction-tagline text-center text-amber-700/60 mb-3">Rare seeds under the hammer — prices drop every 30s. Snipe the dip.</p>
+      <div class="text-center mb-1"><span class="auction-money-pill">💵 $<span id="auction-money">100</span></span></div>
+      <div id="auction-items-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
+      <div class="text-center mt-6"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- ASCEND -->
+    <div id="ascend-screen" class="hidden screen-container max-w-6xl mx-auto sanctum-screen">
+      <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+        <h2 class="text-4xl font-bold" style="background:linear-gradient(135deg,#d0a0ff,#6a5acd,#1a0b3e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🜃 The Aethelgard Sanctuary</h2>
+        <div class="sanctum-constellation">✦ ✧ ˖ ⁙ ⊹ ✦ ⬆️ ✦ ⊹ ⁙ ˖ ✧ ✦</div>
+        <div class="token-counter">🪙 Rebirth Tokens: <span id="rebirth-tokens-display">0</span></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sanctum-grid">
+        <div>
+          <div class="singularity-card">
+            <div class="obelisk">🗿</div>
+            <div class="text-2xl font-black mt-2" style="color:#ff6a4a;text-shadow:0 0 24px rgba(255,80,40,0.5);">THE SINGULARITY ENGINE</div>
+            <p class="text-sm mt-2" style="color:rgba(255,200,190,0.6);">A swirling vortex of nebulae and starlight. Pay the cosmic toll to shatter your garden into stardust and be reborn.</p>
+            <div class="mt-4 space-y-2 text-left text-sm">
+              <div style="color:#ffd6cc;">⬆️ Rebirth Level: <b id="rebirth-count-display">0</b></div>
+              <div style="color:#ffd6cc;">💠 Current Cost: <b id="rebirth-cost-display">$0</b></div>
+              <div style="color:#ffd6cc;">💰 Your Coins: <b id="rebirth-money-display">$0</b></div>
+              <div style="color:#ffe9a0;">You can afford <b id="rebirth-affordable-display">0</b></div>
+            </div>
+            <button id="cosmic-rebirth-btn" class="singularity-btn mt-4">🜂 ⬆️ COSMIC REBIRTH ⬆️ 🜂</button>
+            <p class="text-[10px] mt-3" style="color:rgba(255,180,170,0.4);">Resets plants, seeds, coins &amp; achievements. Gains +1 Rebirth Token (+bonus per Tokens Multi). Pets &amp; permanent upgrades survive.</p>
+          </div>
+          <div class="text-center mt-4"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+        </div>
+        <div class="sanctum-panel">
+          <h3 class="text-xl font-black mb-3" style="color:#cfe0ff;">Sanctum of Eternity</h3>
+          <p class="text-xs mb-3" style="color:rgba(200,210,255,0.45);">Permanent upgrades — costs rise 50% per purchase.</p>
+          <div id="rebirth-shop-list" class="max-h-[70vh] overflow-y-auto"></div>
+        </div>
+        <div class="sanctum-panel">
+          <h3 class="text-xl font-black mb-3" style="color:#ffe9c2;">Exotic &amp; Transcendent Vault</h3>
+          <p class="text-xs mb-3" style="color:rgba(255,220,170,0.5);">Legendary artifacts unleash roars that shake the cosmos.</p>
+          <div id="vault-list" class="max-h-[70vh] overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DLC -->
+    <div id="dlc-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#6a3a7a,#4a2a5a,#3a1a4a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎫 DLC</h2>
+      <div class="dlc-card" style="background:radial-gradient(circle at 20% 20%, rgba(80,180,80,0.06), rgba(20,50,20,0.12));border:2px solid rgba(80,180,80,0.06);border-radius:40px;padding:36px;text-align:center;transition:all 0.3s ease;position:relative;overflow:hidden;">
+        <div class="max-w-md mx-auto"><div class="text-4xl mb-2">🎮</div><p class="text-amber-700/60 mb-4">Enter a DLC code to unlock exclusive rewards!</p><input type="text" id="dlc-input" placeholder="Enter DLC code..." maxlength="100" class="w-full p-4 text-lg border-2 border-amber-300/20 rounded-3xl text-center bg-white/5 text-amber-100 placeholder-amber-500/30 focus:outline-none focus:border-amber-400/50" /><button id="dlc-redeem-btn" class="w-full mt-4 vine-btn vine-btn-berry text-xl py-4">🎮 Redeem</button></div>
+        <div id="dlc-message" class="mt-4 text-center text-sm text-amber-700/60"></div>
+      </div>
+      <div class="text-center mt-6"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div id="events-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <div class="p-6 mb-6 bg-gradient-to-br from-yellow-50/5 via-orange-50/5 to-amber-50/5 rounded-4xl border border-amber-200/10">
+        <h2 class="text-5xl font-bold text-center" style="background:linear-gradient(135deg,#c8a040,#a07830,#8a6020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎉 Events</h2>
+        <p class="text-center text-amber-700/70 text-lg mt-2">Discover magical happenings!</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white/5 p-6 rounded-xl border border-purple-300/10"><div class="text-5xl text-center mb-3">🧬</div><div class="text-xl font-bold text-center text-purple-700">Mutation Chronicles</div><button id="mutation-events-btn" class="w-full vine-btn vine-btn-berry mt-4">🔬 View</button></div>
+        <div class="bg-white/5 p-6 rounded-xl border border-amber-300/10"><div class="text-5xl text-center mb-3">⏰</div><div class="text-xl font-bold text-center text-amber-700">Playtime Rewards</div><button id="playtime-events-btn" class="w-full vine-btn mt-4" style="background:linear-gradient(145deg,#6a8a3a,#4a6a2a);">🎁 Claim</button></div>
+        <div class="bg-white/5 p-6 rounded-xl border border-rose-300/10"><div class="text-5xl text-center mb-3">🍳</div><div class="text-xl font-bold text-center text-rose-700">Food Critic Mayhem</div><button id="food-critic-btn" class="w-full kitchen-btn mt-4">🍽️ Enter</button></div>
+        <div class="bg-white/5 p-6 rounded-xl border border-yellow-300/10"><div class="text-5xl text-center mb-3">🏅</div><div class="text-xl font-bold text-center text-yellow-700">Achievements</div><button id="achievements-btn" class="w-full vine-btn mt-4" style="background:linear-gradient(145deg,#4a8a3a,#2d6a2d);">🏅 View</button></div>
+      </div>
+      <div class="text-center"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- MUTATION HISTORY -->
+    <div id="mutation-history-screen" class="hidden screen-container max-w-4xl mx-auto"><h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#6a3a7a,#4a2a5a,#3a1a4a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🧬 Mutation History</h2><div id="mutation-history-content" class="space-y-4 mb-6"></div><div class="text-center"><button class="back-to-garden vine-btn">🏠 Back</button></div></div>
+
+    <!-- PLAYTIME REWARDS -->
+    <div id="playtime-events-screen" class="hidden screen-container max-w-4xl mx-auto"><h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⏰ Playtime Rewards</h2><div id="playtime-rewards" class="space-y-4 mb-6"></div><div class="text-center"><button class="back-to-garden vine-btn">🏠 Back</button></div></div>
+
+    <!-- FOOD CRITIC -->
+    <div id="food-critic-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🍳 Food Critic</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <div class="bg-white/5 p-4 rounded-xl mb-4"><div class="text-2xl font-bold text-amber-800 text-center">⭐ <span id="critic-points">0</span> pts</div></div>
+          <div class="kitchen-card p-5 rounded-3xl mb-4">
+            <h4 class="font-bold text-amber-800 mb-3 flex items-center gap-2"><span class="text-2xl">🥘</span> Cooking Pot <span class="text-xs font-normal text-amber-700/50">(5 slots)</span></h4>
+            <div class="cooking-pot-wrap flex gap-3 flex-wrap justify-center py-3 px-2">
+              <div class="cooking-pot-slot" id="cook-slot-0"></div>
+              <div class="cooking-pot-slot" id="cook-slot-1"></div>
+              <div class="cooking-pot-slot" id="cook-slot-2"></div>
+              <div class="cooking-pot-slot" id="cook-slot-3"></div>
+              <div class="cooking-pot-slot" id="cook-slot-4"></div>
+            </div>
+            <div class="mt-3">
+              <div id="recipe-helper-ingredients" class="flex flex-wrap gap-1"></div>
+              <div id="recipe-helper-status" class="text-sm text-amber-700/60 mt-1">Add 5 ingredients</div>
+              <div id="recipe-helper-result" class="text-sm font-bold text-amber-800 mt-1"></div>
+            </div>
+            <button id="cook-btn" class="kitchen-btn mt-3 w-full" disabled>🔥 Cook</button>
+            <div id="cooking-status" class="text-sm text-amber-700/60 mt-2">Ready</div>
+            <div class="cooking-progress-bar mt-2 hidden" id="cooking-progress-container"><div class="fill" id="cooking-progress-fill" style="width:0%;"></div></div>
+            <div id="cooking-timer-display" class="text-xs text-amber-700/40 mt-1">0:00</div>
+          </div>
+          <div class="bg-white/5 p-4 rounded-xl mb-4"><h4 class="font-bold text-amber-800 mb-2">📋 Recipes</h4><input type="text" id="recipe-search" placeholder="Search recipes..." class="w-full p-2 border-2 border-amber-300/20 rounded-xl bg-white/5 text-amber-100 placeholder-amber-500/30 focus:outline-none focus:border-amber-400/50 mb-2" /><div class="max-h-60 overflow-y-auto"><table class="w-full text-sm"><thead><tr class="border-b border-amber-200/10"><th class="text-left p-1 text-amber-700/60">Name</th><th class="text-left p-1 text-amber-700/60 hidden md:table-cell">Ingredients</th><th class="text-center p-1 text-amber-700/60">⭐</th><th class="text-center p-1 text-amber-700/60">⏱️</th></tr></thead><tbody id="recipe-table-body"></tbody></table></div></div>
+        </div>
+        <div>
+          <div class="kitchen-card p-5 rounded-3xl mb-4">
+            <h4 class="font-bold text-amber-800 mb-3 flex items-center gap-2"><span class="text-2xl">🌿</span> Your Plants <span class="text-xs font-normal text-amber-700/50">(click to add to pot)</span></h4>
+            <div id="cook-inventory-list" class="plant-pick-grid"></div>
+          </div>
+          <div class="bg-white/5 p-4 rounded-xl">
+            <h4 class="font-bold text-amber-800 mb-2">🏆 Milestones</h4>
+            <div id="milestones-container" class="space-y-2 max-h-48 overflow-y-auto"></div>
+            <div class="flex gap-2 mt-3 flex-wrap"><button id="claim-btn" class="kitchen-btn text-sm py-1 px-4">🎁 Claim Rewards</button><button id="reset-milestones-btn" class="vine-btn vine-btn-danger text-sm py-1 px-4">🔄 Reset ($200k)</button></div>
+            <div id="claim-result" class="text-xs text-amber-700/60 mt-2"></div>
+            <div id="claim-timer" class="text-xs text-amber-700/40 mt-1">Ready!</div>
+          </div>
+          <div class="bg-white/5 p-4 rounded-xl mt-4">
+            <h4 class="font-bold text-amber-800 mb-2">⭐ Submit to Critic</h4>
+            <div id="critic-inventory-list" class="flex flex-wrap gap-2"></div>
+            <div class="flex gap-2 mt-2 items-center">
+              <input type="number" id="critic-submit-qty" value="1" min="1" max="999" class="w-20 p-2 border-2 border-amber-300/20 rounded-xl bg-white/5 text-amber-100" />
+              <button id="critic-submit-max-btn" class="text-xs bg-amber-200/10 px-2 py-1 rounded-xl text-amber-800">Max</button>
+              <button id="submit-critic-btn" class="kitchen-btn text-sm py-1 px-4">⭐ Submit</button>
+            </div>
+            <div id="critic-submit-result" class="text-xs text-amber-700/60 mt-2"></div>
+          </div>
+          <div class="bg-white/5 p-4 rounded-xl mt-4">
+            <h4 class="font-bold text-amber-800 mb-2">🥚 Gourmet Egg Incubator</h4>
+            <p class="text-xs text-amber-700/60 mb-2">Every <b>125 ⭐</b> critic points earns <b>1 Gourmet Egg</b> automatically.</p>
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <span class="text-amber-100">Eggs: <span id="egg-count" class="font-bold text-amber-800">0</span></span>
+              <button id="incubate-egg-btn" class="kitchen-btn text-sm py-1 px-3" disabled>🥚 Incubate</button>
+              <button id="hatch-egg-btn" class="kitchen-btn text-sm py-1 px-3" disabled style="background:linear-gradient(135deg,#f59e0b,#d97706);">🐣 Hatch!</button>
+            </div>
+            <div id="egg-status" class="text-sm text-amber-800 font-bold"></div>
+            <div class="cooking-progress-bar mt-2 hidden" id="egg-progress-container"><div class="fill" id="egg-progress-fill" style="width:0%;background:linear-gradient(90deg,#fbbf24,#d97706);"></div></div>
+            <div id="egg-timer-display" class="text-xs text-amber-700/40 mt-1"></div>
+            <div id="egg-chances" class="text-xs text-amber-700/60 mt-1">🥯 Bagel Bunny 50% · 🥞 Pancake Mole 38% · 🐻‍❄️ Sushi Bear 7% · 🦥 Spaghetti Sloth 4% · 🍟 French Fry Ferret 1%</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-6"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div id="achievements-screen" class="hidden screen-container max-w-4xl mx-auto"><h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#7ad07a,#4a9a4a,#2d7a2d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🏅 Achievements</h2><div id="achievements-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"></div><div class="text-center"><button class="back-to-garden vine-btn">🏠 Back</button></div></div>
+
+    <!-- PET CLUB -->
+    <div id="petclub-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <div class="p-6 mb-6 bg-gradient-to-r from-purple-100/5 via-indigo-100/5 to-purple-100/5 rounded-4xl border border-purple-200/10">
+        <h2 class="text-5xl font-bold text-center" style="background:linear-gradient(135deg,#8a5a9a,#6a3a7a,#4a2a5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🐾 Pet Club</h2>
+        <p class="text-center text-amber-700/70 text-sm mt-2">Your beloved pets wander freely. Click a pet to see its details!</p>
+        <div class="text-center mt-2 text-sm"><span class="text-amber-800">Slots: <span id="pet-slot-display">3</span>/<span id="pet-max-slots">3</span></span> <button id="upgrade-pet-slots-btn" class="vine-btn vine-btn-gold text-xs py-1 px-3 ml-2">⬆️ Upgrade</button></div>
+      </div>
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1"><div class="petclub-mat" id="petclub-mat"><div id="petclub-pets-container" class="petclub-pet-grid"></div></div><div class="text-center text-xs text-amber-700/40 mt-2">Click any pet to view their stats</div></div>
+        <div class="pet-detail-panel" id="petclub-detail">
+          <div id="petclub-detail-empty" class="text-center text-amber-700/40 py-8"><div class="text-5xl mb-2">🐾</div><div>Select a pet</div></div>
+          <div id="petclub-detail-content" style="display:none;">
+            <div class="pet-emoji text-5xl text-center" id="pcd-emoji">🐶</div>
+            <div class="pet-name text-xl font-bold text-center text-amber-800" id="pcd-name">Pet Name</div>
+            <div class="text-xs text-amber-700/60 text-center mb-2" id="pcd-rarity">Common</div>
+            <div class="stat-row"><span class="label">Level</span><span class="value" id="pcd-level">1</span></div>
+            <div class="stat-row"><span class="label">Exp</span><span class="value" id="pcd-exp">0 / 100</span></div>
+            <div class="exp-bar"><div class="fill" id="pcd-exp-bar" style="width:0%;"></div></div>
+            <div class="stat-row"><span class="label">Hunger</span><span class="value" id="pcd-hunger">100%</span></div>
+            <div class="stat-row"><span class="label">Ability</span><span class="value text-amber-800/80 text-sm" id="pcd-ability">—</span></div>
+            <div class="stat-row"><span class="label">Cooldown</span><span class="value" id="pcd-cooldown">Ready</span></div>
+            <div class="stat-row"><span class="label">Power</span><span class="value text-amber-800" id="pcd-power">1.0x</span></div>
+            <div class="mt-3 flex flex-wrap gap-2 justify-center">
+              <button class="feed-btn kitchen-btn text-sm py-1 px-4" id="pcd-feed-btn">🍖 Feed</button>
+              <button class="vine-btn" style="background:linear-gradient(145deg,#3a5a3a,#2a4a2a);padding:4px 14px;font-size:0.8rem;color:#e8f4e8;" id="pcd-close-btn">Close</button>
+              <button class="vine-btn" style="background:linear-gradient(145deg,#6a4a3a,#4a2a2a);padding:4px 14px;font-size:0.8rem;" id="pcd-equip-btn">Equip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-6"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#4a5a7a,#2a3a5a,#1a2a3a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⚙️ Settings</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="settings-card"><h3 class="text-xl font-bold text-amber-800 mb-3">🌐 Language</h3><div class="flex flex-wrap gap-3"><button class="language-btn active" data-lang="en">🇬🇧 English</button><button class="language-btn" data-lang="zh">🇨🇳 中文</button><button class="language-btn" data-lang="zh-tw">🇹🇼 繁體</button></div></div>
+        <div class="settings-card"><h3 class="text-xl font-bold text-amber-800 mb-3">🎮 Gameplay</h3><div class="flex flex-wrap gap-3 items-center"><button id="settings-animations-btn" class="vine-btn" style="background:linear-gradient(145deg,#3a7a8a,#2a5a6a);padding:6px 16px;font-size:0.8rem;">🎨 Animations: ON</button></div></div>
+        <div class="settings-card"><h3 class="text-xl font-bold text-amber-800 mb-3">💾 Save / Load</h3><div class="flex flex-wrap gap-3"><button id="settings-save-btn" class="vine-btn" style="background:linear-gradient(145deg,#8a6a3a,#6a4a2a);padding:6px 16px;font-size:0.8rem;">💾 Save</button><button id="settings-load-btn" class="vine-btn" style="background:linear-gradient(145deg,#4a6a3a,#3a4a2a);padding:6px 16px;font-size:0.8rem;">📂 Load</button><button id="settings-export-btn" class="vine-btn" style="background:linear-gradient(145deg,#3a7a8a,#2a5a6a);padding:6px 16px;font-size:0.8rem;">📤 Export</button><button id="settings-import-btn" class="vine-btn" style="background:linear-gradient(145deg,#4a5a6a,#3a4a5a);padding:6px 16px;font-size:0.8rem;">📥 Import</button></div></div>
+        <div class="settings-card"><h3 class="text-xl font-bold text-amber-800 mb-3">🗑️ Danger</h3><button id="settings-reset-btn" class="vine-btn vine-btn-danger" style="padding:6px 16px;font-size:0.8rem;">🗑️ Reset All</button><p class="text-xs text-red-500/50 mt-2">This cannot be undone!</p></div>
+      </div>
+      <div class="settings-card mb-6"><h3 class="text-xl font-bold text-amber-800 mb-3">📋 Update Log</h3><div class="update-log-entry"><div class="date">📅 Garden Oasis v8.0</div><div>🎉 Super Weather system, 11 new mutations, massive beach redesign!</div></div></div>
+      <div class="settings-card mb-6"><h3 class="text-xl font-bold text-amber-800 mb-3">👤 Profile</h3><div class="flex flex-wrap gap-3 items-center"><input type="text" id="settings-name-input" placeholder="New name..." maxlength="20" class="flex-1 min-w-[150px] p-3 border-2 border-amber-300/20 rounded-xl bg-white/5 text-amber-100 placeholder-amber-500/30 focus:outline-none focus:border-amber-400/50" /><button id="settings-name-btn" class="vine-btn" style="background:linear-gradient(145deg,#3a3a8a,#1a1a5a);padding:6px 16px;font-size:0.8rem;">Update</button></div><div class="mt-3 text-sm text-amber-700/60">Current: <span id="settings-name-display" class="text-amber-800 font-bold">—</span></div></div>
+      <div class="settings-card"><h3 class="text-xl font-bold text-amber-800 mb-3">📊 Stats</h3><div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-amber-800"><div><span class="text-amber-700">Money:</span> $<span id="settings-money">0</span></div><div><span class="text-amber-700">Water:</span> <span id="settings-water">0</span></div><div><span class="text-amber-700">Rebirths:</span> <span id="settings-ascend">0</span></div><div><span class="text-amber-700">Playtime:</span> <span id="settings-playtime">0</span>m</div><div><span class="text-amber-700">Mutations:</span> <span id="settings-mutations">0</span></div><div><span class="text-amber-700">Gambles:</span> <span id="settings-gambles">0</span></div><div><span class="text-amber-700">Plants:</span> <span id="settings-plants">0</span></div><div><span class="text-amber-700">Tokens:</span> <span id="settings-tokens">0</span></div></div></div>
+      <div class="text-center mt-6"><button class="back-to-garden vine-btn">🏠 Back to Garden</button></div>
+    </div>
+
+    <!-- TRAVEL SCREEN REPLACED WITH WOODEN BOARD -->
+    <div id="travel-screen" class="hidden screen-container max-w-lg mx-auto">
+      <div class="p-10 bg-amber-900/80 border-8 border-amber-700/50 rounded-3xl shadow-2xl text-center relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, rgba(139,69,19,0.2) 0px, rgba(139,69,19,0.2) 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);">
+        <div class="absolute top-3 left-3 w-4 h-4 rounded-full bg-amber-800/80 shadow-inner"></div>
+        <div class="absolute top-3 right-3 w-4 h-4 rounded-full bg-amber-800/80 shadow-inner"></div>
+        <div class="absolute bottom-3 left-3 w-4 h-4 rounded-full bg-amber-800/80 shadow-inner"></div>
+        <div class="absolute bottom-3 right-3 w-4 h-4 rounded-full bg-amber-800/80 shadow-inner"></div>
+        <div class="text-6xl mb-4 drop-shadow-md">🚧</div>
+        <h2 class="text-4xl font-bold text-amber-100 drop-shadow-md" style="font-family: 'Courier New', monospace;">Sorry for the Delay!</h2>
+        <p class="text-xl text-amber-200/80 mt-4 drop-shadow-sm" style="font-family: 'Courier New', monospace;">Needed 1 more week to build the new super weather update.</p>
+        <p class="text-sm text-amber-300/50 mt-8">Coming soon: Fog, Starfall, Tsunamis, and more!</p>
+        <button class="back-to-garden vine-btn vine-btn-gold mt-8 px-10">🏠 Back to Garden</button>
+      </div>
+    </div>
+
+
+    <!-- ADMIN SCREEN -->
+    <div id="admin-screen" class="hidden screen-container max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-center" style="background:linear-gradient(135deg,#b478ff,#9060d0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Admin Toolkit</h2>
+      <p class="text-center text-amber-700/70 text-sm mt-2 mb-4">Developer tools &amp; cheats</p>
+      <div id="abuse-bar-container"></div>
+      <div class="text-center mt-6"><button class="vine-btn" onclick="showScreen('garden')">Back to Garden</button></div>
+    </div>
+
+  </div>
+
+  <script src="game.js"></script>
+
+<script>
+(function(){
+  window.__errs = [];
+  window.addEventListener('error', function(e){ window.__errs.push((e.message||'err')+' @'+(e.lineno||'?')); });
+  window.addEventListener('unhandledrejection', function(e){ window.__errs.push('REJECT: '+(e.reason&&e.reason.message||e.reason)); });
+  setTimeout(function(){
+    try {
+      var status = 'goGarden=' + (typeof window.goGarden) + '  gameReady=' + (typeof window.gameReady)+':'+window.gameReady +
+                   '  errs=[' + (window.__errs.length ? window.__errs.join(' | ') : 'none') + ']';
+      var d = document.createElement('div');
+      d.id = 'boot-err';
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#7f1d1d;color:#fff;font:12px monospace;padding:6px 10px;white-space:pre-wrap;';
+      d.textContent = 'BOOT DIAG: ' + status;
+      document.body.appendChild(d);
+    } catch(x){}
+  }, 3500);
+})();
+</script>
+</body>
+</html>
