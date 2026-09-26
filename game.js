@@ -572,11 +572,11 @@
       const modal = document.createElement('div');
       modal.className = 'modal-overlay';
       modal.id = 'seed-selector-modal';
-      let html = `<div class="modal-card" style="max-width:700px;"><h2 style="font-size:1.8rem;margin-bottom:4px;">🌱 ${t('select')} a Seed</h2><p style="text-align:center;color:#8aa88a;margin-bottom:16px;">Click a seed to plant it in the empty slot</p><input type="text" class="seed-selector-search" id="seed-search" placeholder="Search seeds..." /><div class="seed-selector-grid" id="seed-grid">`;
+      let html = `<div class="modal-card" style="max-width:700px;"><h2 style="font-size:1.8rem;margin-bottom:4px;">🌱 ${t('select')} a Seed</h2><p style="text-align:center;color:#97a6e8;margin-bottom:16px;">Click a seed to plant it in the empty slot</p><input type="text" class="seed-selector-search" id="seed-search" placeholder="Search seeds..." /><div class="seed-selector-grid" id="seed-grid">`;
       seedItems.forEach(item => {
         const rc = getRarityClass(item.rarity);
         const displayName = G.currentLanguage === 'en' ? item.displayName : getCnName(item.displayName);
-        html += `<div class="seed-selector-item" data-key="${item.key}" data-name="${item.name}" style="border-color: ${item.rarity === 'iridescent' ? '#ffd700' : 'rgba(80,180,80,0.04)'};"><div class="seed-emoji">${item.emoji}</div><div class="seed-name" title="${displayName}">${displayName}</div><div class="seed-qty">×${item.qty}</div><span class="rarity-badge ${rc}" style="font-size:0.5rem;padding:0 8px;line-height:1.8;">${item.rarity}</span></div>`;
+        html += `<div class="seed-selector-item" data-key="${item.key}" data-name="${item.name}" style="border-color: ${item.rarity === 'iridescent' ? '#ffd700' : 'rgba(140,150,255,0.10)'};"><div class="seed-emoji">${item.emoji}</div><div class="seed-name" title="${displayName}">${displayName}</div><div class="seed-qty">×${item.qty}</div><span class="rarity-badge ${rc}" style="font-size:0.5rem;padding:0 8px;line-height:1.8;">${item.rarity}</span></div>`;
       });
       html += `</div><button class="close-modal-btn" id="seed-selector-close">${t('cancel')}</button></div>`;
       modal.innerHTML = html;
@@ -599,6 +599,12 @@
     }
 
     function plantSeed(index, seedType) {
+      if (index < 0 || index === undefined || index === null) {
+        let first = -1;
+        for (let fi = 0; fi < G.garden.length; fi++) { if (!G.garden[fi].plant) { first = fi; break; } }
+        if (first === -1) { showNotification('Garden is full! Expand or harvest first.', 'lose'); return; }
+        index = first;
+      }
       if (G.garden[index].plant) { showNotification('Already planted!', 'lose'); return; }
       let plant, seedKey = null;
       if (seedType === 'super') {
@@ -723,13 +729,13 @@
         div.addEventListener('click', function(e) {
           if (e.target.closest('button')) return;
           if (it.isSeedPack) { openSeedPackMachine(); return; }
-          if (it.isSeed) { showSeedSelector(-1); } else if (it.isGear && it.isSprinkler) { startSprinklerPlacement(it.key); } else if (it.isGear && it.isTool) { handleGearUse(it.name); renderInventory(); } else if (it.isFood) { showNotification('🍳 Food items go to the Kitchen!', 'win'); showScreen('events'); } else { G.selectedSeed = it.name; showNotification('📦 Selected ' + it.name, 'win'); showScreen('garden'); }
+          if (it.isSeed) { plantSeed(-1, it.name); showScreen('garden'); renderInventory(); } else if (it.isGear && it.isSprinkler) { startSprinklerPlacement(it.key); } else if (it.isGear && it.isTool) { handleGearUse(it.name); renderInventory(); } else if (it.isFood) { showNotification('🍳 Food items go to the Kitchen!', 'win'); showScreen('events'); } else { G.selectedSeed = it.name; showNotification('📦 Selected ' + it.name, 'win'); showScreen('garden'); }
         });
         grid.appendChild(div);
       }
       grid.querySelectorAll('.inv-place-btn').forEach(btn => { btn.addEventListener('click', function(e) { e.stopPropagation(); startSprinklerPlacement(this.dataset.key); }); });
       grid.querySelectorAll('.inv-use-btn').forEach(btn => { btn.addEventListener('click', function(e) { e.stopPropagation(); handleGearUse(G.inventory[this.dataset.key]?.item); renderInventory(); }); });
-      grid.querySelectorAll('.inv-plant-btn').forEach(btn => { btn.addEventListener('click', function(e) { e.stopPropagation(); const key = this.dataset.key; const item = G.inventory[key]; if (!item || item.quantity === 0) return; showSeedSelector(-1); }); });
+      grid.querySelectorAll('.inv-plant-btn').forEach(btn => { btn.addEventListener('click', function(e) { e.stopPropagation(); const key = this.dataset.key; const item = G.inventory[key]; if (!item || item.quantity === 0) return; plantSeed(-1, item.item); showScreen('garden'); }); });
       grid.querySelectorAll('.inv-open-btn').forEach(btn => { btn.addEventListener('click', function(e) { e.stopPropagation(); openSeedPackMachine(); }); });
     }
 
