@@ -1818,8 +1818,161 @@ const REBIRTH_UPGRADES = {
       launchConfetti(60); renderGourmetEggs(); try { renderPetStore(); } catch (e) {} updateDisplay();
     }
 
+
+    // ==================== GRAND FEAST (v12.0) ====================
+    const GF_RANKS = [
+      [0, 'Sauté Beginner'], [250, 'Novice Cook'], [750, 'Sous Apprentice'], [1500, 'Food Inspector'],
+      [3000, 'Executive Critic'], [8000, 'MASTER Critic'], [25000, 'GRAND CHEF']
+    ];
+    const BAKERY_RECIPES = [
+      { name: '🥐 Butter Croissant', cost: 1500, dur: 60000, payout: 3400, xp: 1 },
+      { name: '🥖 Rustic Baguette', cost: 6000, dur: 150000, payout: 13500, xp: 3 },
+      { name: '🍮 Vanilla Creme Eclair', cost: 22000, dur: 300000, payout: 52000, xp: 7 },
+      { name: '🍰 Grand Gateau', cost: 80000, dur: 600000, payout: 195000, xp: 15 },
+      { name: '🎂 Croquembouche Tower', cost: 300000, dur: 1200000, payout: 760000, xp: 40 }
+    ];
+    const GF_GAZETTE = [
+      { ed: 1, title: 'Oasis Gazette: The Grand Opening!', body: 'A new season dawning! Pierre unveils his bakery and the garden smells of butter and starlight.' },
+      { ed: 2, title: 'Oasis Gazette: The Rebirth Accord', body: 'Cosmic Rebirth documented. Citizens are trading their gardens for Tokens at the Aethelgard Sanctuary.' },
+      { ed: 3, title: 'Oasis Gazette: The Eggfell', body: 'Strange ornate eggs fell from the sky. Critics whisper they hatch bagels, moles and very rare ferrets.' },
+      { ed: 4, title: 'Oasis Gazette: Le Jardin Rising', body: 'A $25M restaurant has changed hands! Rumors of a rat chef who can double the kitchen cash.' }
+    ];
+    function gfInit() {
+      var g = G.grandFeast || (G.grandFeast = {});
+      if (g.bakery === undefined || typeof g.bakery !== 'object') g.bakery = { jobs: [], total: 0 };
+      if (g.rank === undefined) g.rank = 0;
+      if (g.cravings === undefined) g.cravings = 0;
+      if (g.goldBadges === undefined) g.goldBadges = 0;
+      if (g.cookOffWeek === undefined) g.cookOffWeek = 1;
+      if (g.cookOffDue === undefined) g.cookOffDue = Date.now() + 7 * 86400000;
+      if (g.cookOffPoints === undefined) g.cookOffPoints = 0;
+      if (g.cookOffClaimed === undefined) g.cookOffClaimed = false;
+      if (g.goldSpatula === undefined) g.goldSpatula = 0;
+      if (g.cravingTarget === undefined) g.cravingTarget = null;
+      if (g.cravingUntil === undefined) g.cravingUntil = 0;
+      if (g.cravingNext === undefined) g.cravingNext = Date.now() + 15000;
+      if (g.restaurant === undefined) g.restaurant = false;
+      if (g.remy === undefined) g.remy = false;
+      if (g.incomeTick === undefined) g.incomeTick = 0;
+      return g;
+    }
+    function gfRankName(pts) {
+      var out = GF_RANKS[0][1];
+      for (var i = 0; i < GF_RANKS.length; i++) { if (pts >= GF_RANKS[i][0]) out = GF_RANKS[i][1]; }
+      return out;
+    }
+    function gfNextRank(pts) { for (var i = 0; i < GF_RANKS.length; i++) { if (pts < GF_RANKS[i][0]) return GF_RANKS[i][0]; } return null; }
+    function startBake(i) {
+      var g = gfInit(); var recipe = BAKERY_RECIPES[i]; if (!recipe) return;
+      var jobs = g.bakery.jobs;
+      if (jobs.length >= 3) { showNotification('Oven queue is full! (3 slots)', 'lose'); return; }
+      if (G.money !== Infinity && G.money < recipe.cost) { showNotification('Need $' + formatMoney(recipe.cost) + ' to bake that.', 'lose'); return; }
+      if (G.money !== Infinity) G.money -= recipe.cost;
+      jobs.push({ id: Date.now() + Math.random(), name: recipe.name, start: Date.now(), dur: recipe.dur });
+      showNotification('🥐 Baking ' + recipe.name.split(' ')[1] + '...', 'win');
+      renderGrandFeast(); updateDisplay();
+    }
+    function buyRestaurant() {
+      var g = gfInit();
+      if (g.restaurant) { showNotification('Le Jardin is already yours!', 'lose'); return; }
+      if (G.money !== Infinity && G.money < 25000000) { showNotification('Need $25M for Le Jardin!', 'lose'); return; }
+      if (G.money !== Infinity) G.money -= 25000000;
+      g.restaurant = true;
+      showNotification('🍽️ Bonjour! Le Jardin Restaurant is yours — income every 5s!', 'win'); launchConfetti(80);
+      renderGrandFeast(); updateDisplay();
+    }
+    function buyRemy() {
+      var g = gfInit();
+      if (!g.restaurant) { showNotification('Own Le Jardin Restaurant first!', 'lose'); return; }
+      if (g.remy) { showNotification('Remy is already chefing!', 'lose'); return; }
+      if (G.money !== Infinity && G.money < 2500000) { showNotification('Need $2.5M to hire Remy!', 'lose'); return; }
+      if (G.money !== Infinity) G.money -= 2500000;
+      g.remy = true;
+      showNotification('🐀 Rat Chef Remy doubles Le Jardin income!', 'win'); launchConfetti(50);
+      renderGrandFeast(); updateDisplay();
+    }
+    function trackGrandFeast(recipeName, totalPoints) {
+      var g = gfInit();
+      var pts = G.criticPoints || 0;
+      g.rank = gfRankName(pts);
+      if (g.cravingUntil && g.cravingUntil > Date.now() && g.cravingTarget === recipeName) {
+        g.cravings++; pts = G.criticPoints + totalPoints;
+        showNotification('🌟 Craving fulfilled! +' + Math.round(totalPoints * 0.5) + ' bonus pts (' + (3 - g.cravings) + ' more to gold)', 'win');
+        if (g.cravings >= 3) { g.cravings = 0; g.goldBadges++; g.cravingUntil = 0; g.cravingNext = Date.now() + 30000; showNotification('🏅 GOLDEN CHEF BADGE ×' + g.goldBadges + '!', 'win'); launchConfetti(90); }
+      }
+      if (g.cookOffDue === undefined) g.cookOffDue = Date.now() + 7 * 86400000;
+      if (g.cookOffPoints === undefined) g.cookOffPoints = 0;
+      if (!g.cookOffClaimed) { g.cookOffPoints += totalPoints; var target = gfCookOffTarget(g); if (g.cookOffPoints >= target && target > 0) { g.cookOffClaimed = true; g.goldSpatula++; showNotification('🏆 GOLDEN SPATULA ×' + g.goldSpatula + '!', 'win'); launchConfetti(100); renderGrandFeast(); } }
+    }
+    function gfCookOffTarget(g) { return 2000 + (g.cookOffWeek - 1) * 500; }
+    function renderGrandFeast() {
+      var g = gfInit();
+      if (!document.getElementById('gf-rank')) return;
+      window.gfTick = (window.gfTick || 0) + 1;
+      var pts = G.criticPoints || 0;
+      var rankEl = document.getElementById('gf-rank');
+      var next = gfNextRank(pts);
+      rankEl.innerHTML = '👨‍🍳 <b>' + gfRankName(pts) + '</b>' + (next ? ' <span class="text-amber-700/50 font-normal">· next rank at ' + next + ' pts (current ' + pts + ')</span>' : ' <span class="text-amber-400">· MAX RANK — the kitchen is yours</span>');
+      var craving = document.getElementById('craving-banner');
+      if (g.cravingNext === undefined || g.cravingNext < Date.now()) { g.cravingNext = Date.now() + 60000; var rc = MASTER_RECIPES[Math.floor(Math.random() * MASTER_RECIPES.length)]; g.cravingTarget = rc.name; g.cravingUntil = Date.now() + 120000; g.cravings = 0; }
+      if (g.cravingUntil && g.cravingUntil > Date.now() && g.cravingTarget) {
+        var cd = Math.max(0, Math.round((g.cravingUntil - Date.now()) / 1000));
+        craving.classList.remove('hidden');
+        craving.innerHTML = '<div class="text-sm font-black text-amber-800">🌟 CRITIC CRAVING ×<span id="gf-crave-n">' + g.cravings + '</span>/3</div>' +
+          '<div class="text-xs text-amber-700/80">Submit <b>' + g.cravingTarget + '</b> before ' + cd + 's for +50% points. 3 fulfilled = golden chef badge.</div>';
+      } else { craving.classList.add('hidden'); craving.innerHTML = ''; }
+      var bl = document.getElementById('bakery-recipe-list');
+      var bhtml = '';
+      for (var i = 0; i < BAKERY_RECIPES.length; i++) { var r = BAKERY_RECIPES[i]; var afford = (G.money === Infinity || G.money >= r.cost); bhtml += '<button class="kitchen-btn text-xs py-1 px-3" data-bake="' + i + '" ' + (afford ? '' : 'disabled') + '>' + r.name + '<br><span class="opacity-60">$' + formatMoney(r.cost) + ' · ' + Math.round(r.dur / 1000) + 's</span></button>'; }
+      bl.innerHTML = bhtml;
+      var ovens = document.getElementById('oven-slots');
+      var ohtml = '';
+      var doneClaim = false;
+      for (var s = 0; s < 3; s++) {
+        var job = g.bakery.jobs[s];
+        if (!job) { ohtml += '<div class="oven-chip" style="opacity:.35">Empty</div>'; continue; }
+        var pct = Math.min(100, (Date.now() - job.start) / job.dur * 100);
+        if (pct >= 100) { if (!doneClaim) { doneClaim = true; var payout = gfPayoutFor(job); if (G.money !== Infinity) G.money += payout; g.bakery.total++; showNotification('🥐 ' + job.name + ' is done! +$' + formatMoney(payout), 'win'); } ohtml += '<div class="oven-chip" style="border-color:rgba(255,215,106,.7);color:#ffd76a">✓ ' + job.name.split(' ')[0] + ' done</div>'; continue; }
+        ohtml += '<div class="oven-chip"><div>' + job.name.split(' ')[0] + '</div><div class="cooking-progress-bar" style="height:6px"><div class="fill" style="width:' + pct + '%"></div></div></div>';
+      }
+      if (doneClaim) { g.bakery.jobs = g.bakery.jobs.filter(function (j) { return Date.now() - j.start < j.dur; }); }
+      ovens.innerHTML = ohtml;
+      var w = document.getElementById('gf-cookoff-week'); if (w) w.textContent = 'Week ' + g.cookOffWeek;
+      if (g.cookOffDue === undefined || g.cookOffDue < Date.now()) { if (g.cookOffWeek === undefined) g.cookOffWeek = 1; g.cookOffWeek++; g.cookOffDue = Date.now() + 7 * 86400000; g.cookOffPoints = 0; g.cookOffClaimed = false; }
+      var target2 = gfCookOffTarget(g);
+      var pct2 = Math.min(100, (g.cookOffPoints || 0) / target2 * 100);
+      var bar = document.getElementById('cookoff-bar'); if (bar) bar.style.width = pct2 + '%';
+      var lbl = document.getElementById('cookoff-label'); if (lbl) lbl.textContent = 'Week ' + g.cookOffWeek + ' · ' + (g.cookOffPoints || 0) + '/' + target2 + ' pts';
+      var badge = document.getElementById('cookoff-badge'); if (badge) badge.textContent = g.goldSpatula ? '🏆 GOLDEN SPATULA ×' + g.goldSpatula + ' earned' : (g.cookOffClaimed ? 'Claimed this week' : 'Hit target for a GOLDEN SPATULA!');
+      var ranks = document.getElementById('world-rank-list');
+      if (ranks) {
+        var rhtml = '';
+        for (var t = GF_RANKS.length - 1; t >= 0; t--) { var tier = GF_RANKS[t]; var mine = pts >= tier[0]; if (t < GF_RANKS.length - 1 && pts < GF_RANKS[t + 1][0]) { rhtml += '<div class="gf-rank-row" style="border-color:rgba(255,215,106,.55);color:#ffe9a0;font-weight:bold">★ ' + tier[1] + ' — YOU (' + pts + ' pts)</div>'; } else { rhtml += '<div class="gf-rank-row">' + (mine ? '✓ ' : '') + tier[1] + ' — ' + tier[0].toLocaleString() + ' pts</div>'; } }
+        ranks.innerHTML = rhtml;
+      }
+      var gaz = document.getElementById('gazette-list');
+      if (gaz) {
+        var ghtml = ''; var newestShown = false;
+        for (var e = GF_GAZETTE.length - 1; e >= 0; e--) { var ed = GF_GAZETTE[e]; if (e < GF_GAZETTE.length - 1 && !newestShown) { break; } if (!newestShown) { newestShown = true; ghtml += '<div class="gf-gazette" style="border-color:rgba(255,215,106,.5)"><span class="text-amber-800 font-bold">Ed. ' + ed.ed + ' · CURRENT</span> · <b>' + ed.title + '</b><br>' + ed.body + '</div>'; } else { ghtml += '<div class="gf-gazette">Ed. ' + ed.ed + ' · <b>' + ed.title + '</b><br>' + ed.body + '</div>'; } }
+        gaz.innerHTML = ghtml;
+      }
+      var inc = document.getElementById('restaurant-income');
+      if (inc) inc.textContent = g.restaurant ? ('🍽️ Le Jardin open · earns $' + formatMoney(g.remy ? 10000 : 5000) + ' every 5s' + (g.remy ? ' · Remy ×2 active' : '')) : 'Closed. Buy Le Jardin Restaurant for passive income ($25M).';
+      var br = document.getElementById('buy-restaurant-btn'); if (br) { br.disabled = g.restaurant; if (g.restaurant) br.textContent = '🍽️ Le Jardin acquired'; }
+      var rm = document.getElementById('buy-remy-btn'); if (rm) { rm.disabled = !g.restaurant || g.remy; if (g.remy) rm.textContent = '🐀 Remy is chefing'; else if (!g.restaurant) rm.textContent = '🐀 Hire Rat Chef Remy ($2.5M) — own restaurant first'; }
+      if (g.restaurant) {
+        if (g.incomeTick === undefined) g.incomeTick = 0;
+        g.incomeTick += 1000;
+        if (g.incomeTick >= 5000) { g.incomeTick = 0; if (G.money !== Infinity) G.money += (g.remy ? 10000 : 5000); }
+      }
+    }
+    function gfPayoutFor(job) {
+      for (var i = 0; i < BAKERY_RECIPES.length; i++) { if (BAKERY_RECIPES[i].name === job.name) return BAKERY_RECIPES[i].payout; }
+      return Math.round(job.dur / 60000) * 2300;
+    }
+
     function renderFoodCritic() {
-      document.getElementById('critic-points').textContent = G.criticPoints; renderMilestones(); renderRecipeList(); checkGourmetEggs(); renderGourmetEggs();
+      document.getElementById('critic-points').textContent = G.criticPoints; renderMilestones(); renderRecipeList(); checkGourmetEggs(); renderGourmetEggs(); renderGrandFeast();
       const invList = document.getElementById('cook-inventory-list');
       if (invList) {
         invList.innerHTML = '';
@@ -1923,7 +2076,7 @@ const REBIRTH_UPGRADES = {
       const itemName = G.inventory[key].item; const recipe = MASTER_RECIPES.find(r => r.name === itemName); if (!recipe) { showNotification('Not a valid dish!', 'lose'); return; }
       let qty = parseInt(document.getElementById('critic-submit-qty').value) || 1; qty = Math.min(qty, G.inventory[key].quantity); if (qty <= 0) { showNotification('Invalid quantity.', 'lose'); return; }
       G.inventory[key].quantity -= qty; if (G.inventory[key].quantity === 0) delete G.inventory[key];
-      const totalPoints = recipe.points * qty; G.criticPoints += totalPoints; checkGourmetEggs();
+      const totalPoints = recipe.points * qty; G.criticPoints += totalPoints; checkGourmetEggs(); trackGrandFeast(recipe.name, totalPoints);
       showNotification('⭐ +' + totalPoints + ' points for ' + qty + ' × ' + recipe.name + '!', 'win');
       launchConfetti(20 + qty * 2);
       document.getElementById('critic-submit-result').textContent = '✅ Submitted ' + qty + ' × ' + recipe.name + '! +' + totalPoints + ' pts (Total: ' + G.criticPoints + ')';
@@ -2016,7 +2169,7 @@ const REBIRTH_UPGRADES = {
         if (!G.petStats) G.petStats = {};
         for (const key of Object.keys(G.inventory)) { if (typeof G.inventory[key] === 'number') G.inventory[key] = { item: key, quantity: G.inventory[key], mutations: [] }; if (!G.inventory[key].mutations) G.inventory[key].mutations = []; }
         if (!Array.isArray(G.claimedMilestones)) G.claimedMilestones = [];
-        if (!G.permanentTools) G.permanentTools = []; if (G.rebirthTokens === undefined) G.rebirthTokens = 0; if (!G.rebirthUpgrades) G.rebirthUpgrades = {}; if (G.gourmetEggsGranted === undefined) G.gourmetEggsGranted = 0; if (G.gourmetEgg === undefined) G.gourmetEgg = null; try { applyRebirthMods(); } catch (e2) {}
+        if (!G.permanentTools) G.permanentTools = []; if (G.rebirthTokens === undefined) G.rebirthTokens = 0; if (!G.rebirthUpgrades) G.rebirthUpgrades = {}; if (G.gourmetEggsGranted === undefined) G.gourmetEggsGranted = 0; if (G.gourmetEgg === undefined) G.gourmetEgg = null; if (G.grandFeast === undefined || typeof G.grandFeast !== 'object' || Array.isArray(G.grandFeast)) G.grandFeast = {}; try { applyRebirthMods(); } catch (e2) {}
         if (G.afreakyUnlocked) G.pets.maxSlots = 999; else G.pets.maxSlots = Math.min(G.pets.maxSlots || 3, 13);
         if (G.pets.active.length > G.pets.maxSlots) G.pets.active = G.pets.active.slice(0, G.pets.maxSlots);
         G.seedPackLoaded = false; G.seedPackRolling = false; G.seedPackResult = null; G.selectedPackKey = null; G.selectedPackType = null; G.autoRollEnabled = false; G.sprinklerPlacement = null;
@@ -2064,7 +2217,7 @@ const REBIRTH_UPGRADES = {
         permanentTools: [], playtimeRewardsClaimed: [], summerEventTime: 1800, boatFixed: false, shopAnimating: false,
         boatTalkCount: 0, repairTimer: 0, boatRepairing: false, talkedToRepairman: false, scorpionKills: 0, hasShovel: false,
         npcPositions: [], npcDialogueIndex: 0, pizzaStreak: 0, pizzaStreakIndices: [],
-        rebirthTokens: 0, rebirthUpgrades: {}, rebirthDragonLevel: 0, rebirthDragonNext: 0, rebirthDragonPassiveNext: 0, solarBloomNext: 0, gourmetEggsGranted: 0, gourmetEgg: null,
+        rebirthTokens: 0, rebirthUpgrades: {}, rebirthDragonLevel: 0, rebirthDragonNext: 0, rebirthDragonPassiveNext: 0, solarBloomNext: 0, gourmetEggsGranted: 0, gourmetEgg: null, grandFeast: {},
       };
       try { applyRebirthMods(); } catch (e) { console.error('rebirth mods:', e); }
 
@@ -2086,7 +2239,7 @@ const REBIRTH_UPGRADES = {
             }
             if (!G.garden || G.garden.length === 0) G.garden = Array(36).fill(null).map(() => ({ plant: null, planted: 0, watered: false, mutations: [], collections: 0, maxCollections: 0, specialTrait: null, lastAbilityTrigger: 0 }));
             if (!G.achievements) G.achievements = {}; for (const key of Object.keys(ACHIEVEMENTS)) if (G.achievements[key] === undefined) G.achievements[key] = false;
-            if (!G.petStats) G.petStats = {}; if (!G.permanentTools) G.permanentTools = []; if (G.rebirthTokens === undefined) G.rebirthTokens = 0; if (!G.rebirthUpgrades) G.rebirthUpgrades = {}; if (G.gourmetEggsGranted === undefined) G.gourmetEggsGranted = 0; if (G.gourmetEgg === undefined) G.gourmetEgg = null; try { applyRebirthMods(); } catch (e2) {}
+            if (!G.petStats) G.petStats = {}; if (!G.permanentTools) G.permanentTools = []; if (G.rebirthTokens === undefined) G.rebirthTokens = 0; if (!G.rebirthUpgrades) G.rebirthUpgrades = {}; if (G.gourmetEggsGranted === undefined) G.gourmetEggsGranted = 0; if (G.gourmetEgg === undefined) G.gourmetEgg = null; if (G.grandFeast === undefined || typeof G.grandFeast !== 'object' || Array.isArray(G.grandFeast)) G.grandFeast = {}; try { applyRebirthMods(); } catch (e2) {}
             if (G.afreakyUnlocked) G.pets.maxSlots = 999; else G.pets.maxSlots = Math.min(G.pets.maxSlots || 3, 13);
             if (G.pets.active.length > G.pets.maxSlots) G.pets.active = G.pets.active.slice(0, G.pets.maxSlots);
             G.seedPackLoaded = false; G.seedPackRolling = false; G.seedPackResult = null; G.selectedPackKey = null; G.selectedPackType = null; G.autoRollEnabled = false; G.sprinklerPlacement = null;
@@ -2169,6 +2322,8 @@ const REBIRTH_UPGRADES = {
       checkGourmetEggs();
       setInterval(renderGourmetEggs, 1000);
       try { const ie = document.getElementById('incubate-egg-btn'); if (ie) ie.addEventListener('click', startIncubateEgg); const he = document.getElementById('hatch-egg-btn'); if (he) he.addEventListener('click', hatchGourmetEgg); } catch (e) { console.error('egg bind:', e); }
+      setInterval(renderGrandFeast, 1000);
+      try { const gfp = document.getElementById('grand-feast-panel'); if (gfp) gfp.addEventListener('click', function (ev) { const t = ev.target.closest('[data-bake]'); if (t) { startBake(parseInt(t.getAttribute('data-bake'), 10)); return; } if (ev.target.id === 'buy-restaurant-btn') { buyRestaurant(); return; } if (ev.target.id === 'buy-remy-btn') { buyRemy(); return; } if (ev.target.id === 'gazette-toggle') { const arc = document.getElementById('gazette-archive'); if (arc) arc.classList.toggle('hidden'); } }); } catch (e) { console.error('grandfeast bind:', e); }
       setInterval(() => { if (G.petStockTimer > 0) { G.petStockTimer--; updatePetStockTimer(); if (G.petStockTimer <= 0) { initPetStock(); showNotification('🐠 Pet Store stock refreshed!', 'win'); if (!document.getElementById('pets-screen').classList.contains('hidden')) renderPetStore(); } } }, 1000);
       generateAuction();
       setInterval(() => { for (const item of G.auctionItems) if (item) item.currentPrice = Math.max(item.baseCost * 0.1, item.currentPrice * 0.98); if (!document.getElementById('auction-screen').classList.contains('hidden')) renderAuction(); }, 30000);
