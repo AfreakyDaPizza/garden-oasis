@@ -559,6 +559,144 @@
     .welcome-card .start-btn:hover { background: linear-gradient(145deg,#45e2f7,#737bff 60%,#bc6bfc) !important;
       box-shadow: 0 14px 64px rgba(168,110,255,.5) !important; }
     .welcome-star { background: #cfd9ff !important; box-shadow: 0 0 8px rgba(180,200,255,.9) !important; }
+
+    /* ==================== PRO UI v15 — BUTTON & COMPONENT ANATOMY ==================== */
+    .vine-btn, .welcome-card .start-btn, .modal-card .close-modal-btn,
+    .top-nav .nav-link, .filter-chip, .shop-filter-btn, .gear-filter-btn, .pet-filter-btn,
+    .auto-roll-btn, .inv-place-btn, .inv-use-btn, .inv-open-btn, .inv-plant-btn {
+      position: relative; overflow: hidden; isolation: isolate;
+      background-clip: padding-box !important; }
+
+    /* ---- chunky 3D button body ---- */
+    .vine-btn, .welcome-card .start-btn {
+      background: linear-gradient(160deg,#2ce0ff,#6366f1 45%,#a855f7 85%) !important;
+      background-size: 180% 180% !important;
+      border: 1px solid rgba(180,190,255,.45) !important;
+      box-shadow: 0 6px 0 rgba(74,58,168,.38), 0 16px 34px rgba(99,110,255,.38), inset 0 1px 0 rgba(255,255,255,.4), inset 0 -4px 8px rgba(30,20,90,.25) !important;
+      text-shadow: 0 1px 0 rgba(0,0,60,.3); }
+    .vine-btn:hover:not(:disabled), .welcome-card .start-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      background-position: 100% 0 !important;
+      box-shadow: 0 9px 0 rgba(74,58,168,.30), 0 22px 50px rgba(168,110,255,.5), inset 0 1px 0 rgba(255,255,255,.5), inset 0 -4px 8px rgba(30,20,90,.22) !important; }
+    .vine-btn:active:not(:disabled), .welcome-card .start-btn:active {
+      transform: translateY(3px) scale(.98);
+      box-shadow: 0 1px 0 rgba(74,58,168,.5), 0 4px 14px rgba(99,110,255,.3), inset 0 2px 6px rgba(0,0,30,.35) !important; }
+    .vine-btn:disabled { filter: grayscale(.6) brightness(.7); transform: none !important; }
+
+    /* gradient sheen sweep for ALL primary-style buttons */
+    .vine-btn::after, .welcome-card .start-btn::after {
+      content: ''; position: absolute; top: 0; bottom: 0; left: -85%; width: 48%; z-index: 1; pointer-events: none;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,.5), transparent);
+      transform: skewX(-18deg); animation: uiSweep 4.2s cubic-bezier(.4,0,.2,1) infinite; }
+    @keyframes uiSweep { 0% { left: -85%; } 55% { left: 135%; } 100% { left: 135%; } }
+
+    .vine-btn-gold { background: linear-gradient(160deg,#ffd56a,#d3a23c 45%,#a57620 85%) !important;
+      background-size: 180% 180% !important;
+      border-color: rgba(255,225,150,.55) !important;
+      box-shadow: 0 6px 0 rgba(112,78,10,.42), 0 16px 34px rgba(220,170,70,.4), inset 0 1px 0 rgba(255,255,255,.5), inset 0 -4px 8px rgba(90,55,5,.28) !important;
+      text-shadow: 0 1px 0 rgba(60,35,0,.35); }
+    .vine-btn-gold:hover { background-position: 100% 0 !important;
+      box-shadow: 0 9px 0 rgba(112,78,10,.34), 0 22px 50px rgba(255,200,90,.5), inset 0 1px 0 rgba(255,255,255,.55) !important; }
+    .vine-btn-gold:active { transform: translateY(3px) scale(.98) !important;
+      box-shadow: 0 1px 0 rgba(112,78,10,.5), 0 4px 14px rgba(255,190,70,.3) !important; }
+
+    .vine-btn-danger { background: linear-gradient(160deg,#ff6b85,#b02a48 45%,#6e0f28 85%) !important;
+      background-size: 180% 180% !important;
+      border-color: rgba(255,140,155,.5) !important;
+      box-shadow: 0 6px 0 rgba(90,0,22,.42), 0 16px 34px rgba(240,82,107,.4), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -4px 8px rgba(40,0,10,.3) !important; }
+    .vine-btn-danger:hover { background-position: 100% 0 !important;
+      box-shadow: 0 9px 0 rgba(90,0,22,.34), 0 22px 50px rgba(255,90,120,.5), inset 0 1px 0 rgba(255,255,255,.4) !important; }
+    .vine-btn-danger:active { transform: translateY(3px) scale(.98) !important;
+      box-shadow: 0 1px 0 rgba(90,0,22,.5), 0 4px 14px rgba(240,82,107,.3) !important; }
+
+    /* quiet/secondary buttons */
+    .modal-card .close-modal-btn {
+      background: linear-gradient(160deg,#4a55c9,#2c3084 70%) !important;
+      box-shadow: 0 4px 0 rgba(20,22,70,.4), 0 10px 26px rgba(70,80,220,.25), inset 0 1px 0 rgba(255,255,255,.22) !important; }
+    .modal-card .close-modal-btn:hover { transform: translateY(-2px) scale(1.01) !important;
+      box-shadow: 0 6px 0 rgba(20,22,70,.32), 0 14px 34px rgba(90,100,255,.35), inset 0 1px 0 rgba(255,255,255,.28) !important; }
+    .modal-card .close-modal-btn:active { transform: translateY(2px) scale(.98) !important;
+      box-shadow: 0 1px 0 rgba(20,22,70,.5) !important; }
+
+    /* nav pills */
+    .top-nav .nav-link { font-weight: 700; letter-spacing: .4px; }
+    .top-nav .nav-link::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+      transform: translateX(-110%); }
+    .top-nav .nav-link:hover::before { transform: translateX(110%); transition: transform .55s ease; }
+    .top-nav .nav-link.active { animation: navPulse 2.4s ease-in-out infinite; }
+    @keyframes navPulse { 0%, 100% { box-shadow: 0 0 12px rgba(99,150,255,.35), inset 0 1px 0 rgba(255,255,255,.10); } 50% { box-shadow: 0 0 26px rgba(120,160,255,.65), inset 0 1px 0 rgba(255,255,255,.14); } }
+    .stat-pill { background: linear-gradient(170deg, rgba(44,52,120,.5), rgba(22,26,64,.55)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 4px 14px rgba(0,0,20,.3) !important; }
+
+    /* inputs get a real field look */
+    .screen-container input:not([type=checkbox]):not([type=radio]), .screen-container select, .screen-container textarea,
+    .welcome-card .input-group input {
+      background: linear-gradient(180deg, rgba(5,7,20,.6), rgba(24,28,62,.5)) !important;
+      border: 1px solid rgba(129,140,248,.22) !important;
+      box-shadow: inset 0 2px 8px rgba(0,0,15,.5), 0 1px 0 rgba(255,255,255,.04) !important;
+      transition: border-color .2s, box-shadow .2s, transform .2s; }
+    .screen-container input:not([type=checkbox]):not([type=radio]):focus, .screen-container select:focus, .screen-container textarea:focus,
+    .welcome-card .input-group input:focus {
+      transform: translateY(-1px);
+      border-color: #67e8f9 !important;
+      box-shadow: 0 0 0 3px rgba(34,211,238,.28), 0 0 24px rgba(99,140,255,.35), inset 0 2px 8px rgba(0,0,15,.4) !important; }
+
+    /* inventory/shop cards: ornamented */
+    .inv-card, .shop-card { position: relative; overflow: hidden; }
+    .inv-card::before, .shop-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(160,175,255,.55), transparent); opacity: .7; }
+    .inv-card::after, .shop-card::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(120% 70% at 50% -12%, rgba(110,150,255,.18), transparent 60%),
+        radial-gradient(circle at 92% 8%, rgba(103,232,249,.14), transparent 26%),
+        radial-gradient(circle at 8% 92%, rgba(236,72,153,.10), transparent 30%);
+      transition: opacity .25s ease; }
+    .inv-card:hover, .shop-card:hover { transform: translateY(-8px) scale(1.03); }
+    .inv-card:hover::after, .shop-card:hover::after { opacity: 1; }
+
+    /* info/recipe/pack option chips */
+    .filter-chip, .shop-filter-btn, .gear-filter-btn, .pet-filter-btn, .auto-roll-btn, .pack-option {
+      background: linear-gradient(160deg, rgba(99,102,241,.16), rgba(40,46,110,.10)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 2px 8px rgba(0,0,15,.25) !important; }
+    .filter-chip:hover, .shop-filter-btn:hover, .gear-filter-btn:hover, .pet-filter-btn:hover, .auto-roll-btn:hover, .pack-option:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 8px 20px rgba(99,120,255,.28), inset 0 1px 0 rgba(255,255,255,.1) !important; }
+    .filter-chip.active, .shop-filter-btn.active, .auto-roll-btn.active {
+      box-shadow: 0 0 18px rgba(34,211,238,.35), inset 0 1px 0 rgba(255,255,255,.14) !important; }
+
+    /* action buttons on cards */
+    .inv-place-btn, .inv-use-btn, .inv-open-btn, .inv-plant-btn {
+      background: linear-gradient(160deg,#2ce0ff,#7b7cff 60%) !important;
+      border: 1px solid rgba(180,190,255,.4) !important;
+      box-shadow: 0 3px 0 rgba(60,60,150,.4), inset 0 1px 0 rgba(255,255,255,.35) !important; }
+    .inv-place-btn:hover, .inv-use-btn:hover, .inv-open-btn:hover, .inv-plant-btn:hover {
+      transform: translateY(-2px); box-shadow: 0 5px 0 rgba(60,60,150,.34), 0 10px 22px rgba(99,120,255,.3), inset 0 1px 0 rgba(255,255,255,.4) !important; }
+    .inv-place-btn:active, .inv-use-btn:active, .inv-open-btn:active, .inv-plant-btn:active {
+      transform: translateY(2px); box-shadow: 0 1px 0 rgba(60,60,150,.5) !important; }
+
+    /* soil slots feel tactile */
+    .plant-slot {
+      background-image: radial-gradient(circle at 50% 30%, rgba(120,140,255,.16), transparent 70%), radial-gradient(circle at 50% 100%, rgba(0,0,20,.4), transparent 70%) !important;
+      background-color: rgba(30,36,84,.35) !important;
+      border-width: 2px !important; }
+    .plant-slot:hover { animation: slotGlow 1.3s ease-in-out infinite alternate; }
+    @keyframes slotGlow { from { box-shadow: 0 0 14px rgba(99,140,255,.30), inset 0 2px 8px rgba(0,0,15,.3); } to { box-shadow: 0 0 30px rgba(120,160,255,.55), inset 0 2px 10px rgba(0,0,15,.35); } }
+    .plant-slot:active { transform: scale(.93); }
+
+    /* garden bed texture */
+    #garden-grid {
+      background-image: repeating-linear-gradient(45deg, rgba(129,140,248,.03) 0 14px, transparent 14px 28px);
+      padding: 10px; border-radius: 28px;
+      border: 1px solid rgba(129,140,248,.10) !important;
+      box-shadow: inset 0 0 40px rgba(0,0,15,.35) !important; }
+
+    /* modals get corner hardware */
+    .modal-card { position: relative; }
+    .modal-card::before { content: ''; position: absolute; top: 14px; left: 14px; width: 34px; height: 34px; pointer-events: none;
+      border-top: 2px solid rgba(103,232,249,.5); border-left: 2px solid rgba(103,232,249,.5); border-radius: 14px 0 0 0; }
+    .modal-card::after { content: ''; position: absolute; bottom: 14px; right: 14px; width: 34px; height: 34px; pointer-events: none;
+      border-bottom: 2px solid rgba(236,72,153,.45); border-right: 2px solid rgba(236,72,153,.45); border-radius: 0 0 14px 0; }
 </style>
 </head>
 <body>
